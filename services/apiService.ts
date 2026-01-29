@@ -146,10 +146,63 @@ export const addUser = async (userData: Omit<User, 'id'>): Promise<User[]> => {
     return updatedUsers;
 };
 
-export const loginUser = async (credential: string): Promise<User | null> => {
+export const loginUser = async (credential: string, password?: string): Promise<User | null> => {
+    // Supabase Auth
+    if (supabase && password) {
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email: credential,
+            password: password
+        });
+
+        if (error) {
+            console.error("Supabase login error:", error.message);
+            return null;
+        }
+
+        if (data.user) {
+            const { data: profile } = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('id', data.user.id)
+                .single();
+
+            let user: User;
+            if (profile) {
+                user = {
+                    id: profile.id,
+                    name: profile.name,
+                    phone: profile.phone,
+                    matricula: profile.matricula,
+                    role: profile.role,
+                    sector: profile.sector,
+                    photoUrl: profile.photo_url,
+                    email: data.user.email
+                };
+            } else {
+                // Minimal user from Auth if profile missing
+                user = {
+                    id: data.user.id,
+                    name: data.user.email?.split('@')[0] || 'User',
+                    matricula: '0000',
+                    role: 'User',
+                    sector: 'OpsMind', // Default sector
+                    phone: '',
+                    email: data.user.email
+                };
+            }
+            await saveData('ecolog-currentUser', user);
+            return user;
+        }
+    }
+
+    // Legacy / Mock Auth
     const users = await getUsers();
     // Permite login tanto por Matrícula quanto por Senha (já que o campo na UI é tipo password)
-    const user = users.find(u => u.matricula === credential || u.password === credential);
+    // Also supports legacy credential check if password is provided
+    const user = users.find(u => 
+        (u.matricula === credential || u.password === credential) || 
+        (password && (u.matricula === credential || u.name === credential) && u.password === password)
+    );
     if (user) {
         await saveData('ecolog-currentUser', user);
         return user;

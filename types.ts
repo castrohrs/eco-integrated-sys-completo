@@ -19,6 +19,7 @@ export interface User {
     name: string;
     phone: string;
     matricula: string;
+    email?: string;
     role: Role;
     sector: Sector;
     password?: string;

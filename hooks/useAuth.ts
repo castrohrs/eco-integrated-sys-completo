@@ -7,7 +7,7 @@ import { supabase } from '../services/supabaseClient';
 interface AuthState {
     currentUser: User | null;
     users: User[];
-    login: (matricula: string) => Promise<boolean>;
+    login: (email: string, password?: string) => Promise<boolean>;
     logout: () => void;
     addUser: (user: Omit<User, 'id'>) => void;
     updateUser: (user: User) => void;
@@ -45,8 +45,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
     }, []);
 
-    const login = async (matricula: string): Promise<boolean> => {
-        const user = await apiService.loginUser(matricula);
+    const login = async (email: string, password?: string): Promise<boolean> => {
+        const user = await apiService.loginUser(email, password);
         if (user) {
             // Note: In a real Supabase production app, you would use supabase.auth.signInWithPassword.
             // For this phase, we keep matricula logic and sync to profile.

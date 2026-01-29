@@ -7,14 +7,15 @@ import MobileMockup from './MobileMockup';
 const AuthPage: React.FC = () => {
     const { login } = useAuth();
     const { t } = useLanguage();
-    const [inputValue, setInputValue] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [error, setError] = useState('');
 
     const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
-        const success = await login(inputValue);
-        if (!success) setError('Acesso negado. Matrícula inválida.');
+        const success = await login(email, password);
+        if (!success) setError('Acesso negado. Credenciais inválidas.');
     };
     
     return (
@@ -41,20 +42,32 @@ const AuthPage: React.FC = () => {
                 <div className="flex-shrink-0 animate-fade-in">
                     <MobileMockup>
                         <div className="w-full px-8 pt-12 pb-8 flex flex-col items-center min-h-full">
-                            <div className="text-center mb-10">
+                            <div className="text-center mb-8">
                                 <h2 className="text-3xl font-black text-slate-900 tracking-tight">Login</h2>
-                                <p className="text-slate-500 text-sm font-medium mt-2">Insira sua matrícula para autorizar o acesso ao núcleo.</p>
+                                <p className="text-slate-500 text-sm font-medium mt-2">Entre com suas credenciais para acessar o núcleo.</p>
                             </div>
                             
-                            <form onSubmit={handleFormSubmit} className="w-full space-y-6">
+                            <form onSubmit={handleFormSubmit} className="w-full space-y-4">
                                 <div className="space-y-2">
-                                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-2">ID de Acesso</label>
+                                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-2">Email</label>
                                     <input 
-                                        className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl text-slate-900 text-center font-mono text-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-50 transition-all outline-none" 
+                                        className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm focus:border-emerald-500 focus:ring-4 focus:ring-emerald-50 transition-all outline-none" 
+                                        type="email" 
+                                        value={email} 
+                                        onChange={e => setEmail(e.target.value)} 
+                                        placeholder="usuario@ecologfuture.com.br"
+                                        required 
+                                    />
+                                </div>
+                                
+                                <div className="space-y-2">
+                                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-2">Senha</label>
+                                    <input 
+                                        className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm focus:border-emerald-500 focus:ring-4 focus:ring-emerald-50 transition-all outline-none" 
                                         type="password" 
-                                        value={inputValue} 
-                                        onChange={e => setInputValue(e.target.value)} 
-                                        placeholder="••••"
+                                        value={password} 
+                                        onChange={e => setPassword(e.target.value)} 
+                                        placeholder="••••••••"
                                         required 
                                     />
                                 </div>
@@ -65,13 +78,13 @@ const AuthPage: React.FC = () => {
                                     </div>
                                 )}
 
-                                <button type="submit" className="w-full p-4 bg-emerald-600 text-white font-black uppercase tracking-widest rounded-2xl hover:bg-emerald-700 shadow-xl shadow-emerald-100 transition-all active:scale-95 flex items-center justify-center gap-3">
+                                <button type="submit" className="w-full p-4 mt-2 bg-emerald-600 text-white font-black uppercase tracking-widest rounded-2xl hover:bg-emerald-700 shadow-xl shadow-emerald-100 transition-all active:scale-95 flex items-center justify-center gap-3">
                                     Acessar Sistema
                                     <i className="fas fa-arrow-right"></i>
                                 </button>
                             </form>
 
-                            <div className="mt-auto pt-10 opacity-30 text-center">
+                            <div className="mt-auto pt-8 opacity-30 text-center">
                                 <i className="fas fa-shield-alt text-lg text-emerald-600 mb-2"></i>
                                 <p className="text-[10px] font-black uppercase tracking-widest">Protocolo de Segurança Ativo</p>
                             </div>
