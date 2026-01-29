@@ -4,6 +4,7 @@ import App from './App';
 import { AppProvider } from './hooks/useAppStore';
 import { AuthProvider } from './hooks/useAuth';
 import { LanguageProvider } from './hooks/useLanguage';
+import './styles/theme.css';
 
 // --- EMERGENCY ERROR BOUNDARY ---
 // Isso impede que o app fique em tela branca se houver erro de script
