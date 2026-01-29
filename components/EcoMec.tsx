@@ -226,9 +226,9 @@ const EcoMec: React.FC = () => {
                             </div>
                             <div className="bg-primary/5 border border-primary/10 p-6 rounded-3xl text-gray-500 text-[10px] font-mono space-y-2">
                                 <p className="text-primary font-bold"># LOG_DE_AUDITORIA</p>
-                                <p>> OPERADOR: {currentUser?.name}</p>
-                                <p>> STATUS_ETAPA: {currentOs.steps[activeOsTab as keyof typeof currentOs.steps].status.toUpperCase()}</p>
-                                <p>> TIMESTAMP: {new Date().toISOString()}</p>
+                                <p>{'>'} OPERADOR: {currentUser?.name}</p>
+                                <p>{'>'} STATUS_ETAPA: {currentOs.steps[activeOsTab as keyof typeof currentOs.steps].status.toUpperCase()}</p>
+                                <p>{'>'} TIMESTAMP: {new Date().toISOString()}</p>
                             </div>
                         </div>
                     </div>
