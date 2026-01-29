@@ -4,11 +4,9 @@ import react from '@vitejs/plugin-react';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: './', // Essencial para deploy em subpastas ou abertura direta do index.html
+  base: '/', // Base / para compatibilidade com Vercel (SPA). Para Electron, pode precisar de ajustes no builder.
   define: {
-    'process.env': {
-      API_KEY: JSON.stringify(process.env.API_KEY || '')
-    }
+    'process.env.API_KEY': JSON.stringify(process.env.API_KEY || '')
   },
   build: {
     outDir: 'dist',
