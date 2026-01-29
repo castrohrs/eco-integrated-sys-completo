@@ -4,8 +4,9 @@ import { useAppStore, SIDEBAR_SECTORS } from '../hooks/useAppStore';
 import { useAuth } from '../hooks/useAuth';
 import { TabId } from '../types';
 import { useLanguage } from '../hooks/useLanguage';
+import { SettingsModal } from './SettingsModal';
 
-const Sidebar: React.FC = () => {
+const Sidebar: React.FC<{ onOpenSettings: () => void }> = ({ onOpenSettings }) => {
     const { 
         activeTab, 
         setActiveTab, 
@@ -110,7 +111,10 @@ const Sidebar: React.FC = () => {
                     </span>
                 </button>
                 
-                <button className="w-full flex items-center h-10 px-3 text-gray-500 hover:text-white hover:bg-white/5 rounded-lg transition-colors group/cfg">
+                <button 
+                    onClick={onOpenSettings}
+                    className="w-full flex items-center h-10 px-3 text-gray-500 hover:text-white hover:bg-white/5 rounded-lg transition-colors group/cfg"
+                >
                     <div className="w-6 flex justify-center">
                         <i className="fas fa-cog text-sm group-hover/cfg:rotate-90 transition-transform duration-500"></i>
                     </div>
@@ -205,10 +209,11 @@ const Header: React.FC = () => {
 
 const AppShell: React.FC<{ children: React.ReactNode; onReturnToLanding?: () => void }> = ({ children, onReturnToLanding }) => {
     const { isSidebarPinned } = useAppStore();
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
     return (
         <div className="flex h-screen w-screen overflow-hidden bg-bg-main">
-            <Sidebar />
+            <Sidebar onOpenSettings={() => setIsSettingsOpen(true)} />
             <div 
                 className={`flex flex-col flex-1 transition-all duration-300 ease-in-out ${isSidebarPinned ? 'ml-[260px]' : 'ml-[65px]'}`}
             >
@@ -226,10 +231,18 @@ const AppShell: React.FC<{ children: React.ReactNode; onReturnToLanding?: () => 
                             <span className="group-hover:text-success transition-colors">ONLINE</span>
                         </span>
                         <span className="hover:text-primary cursor-pointer transition-colors hover:underline">PRIVACIDADE</span>
-                        <span className="hover:text-primary cursor-pointer transition-colors hover:underline">SUPORTE</span>
+                        <a 
+                            href="mailto:OLS34X@GMAIL.COM"
+                            className="hover:text-primary cursor-pointer transition-colors hover:underline text-gray-500"
+                        >
+                            SUPORTE
+                        </a>
                     </div>
                 </footer>
             </div>
+            
+            {/* Modal de Configurações */}
+            <SettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
         </div>
     );
 };

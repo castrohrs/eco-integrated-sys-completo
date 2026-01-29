@@ -12,7 +12,8 @@ export type TabId =
     | 'collaborator-registration' | 'ocr-reader' | 'registration-control' | 'eco-sites' | 'eco-files' | 'general-approvals' 
     | 'compliance' | 'analytical-dashboard' | 'eco-criati' | 'futuro-debitos' | 'eco-chat' | 'cost-radar' | 'account-delays' 
     | 'interest-reports' | 'reimbursement' | 'conexao' | 'eco-clientes' | 'eco-doc' | 'manifesto' | 'eco-mec' | 'operational-manual' 
-    | 'system-docs' | 'eco-maps' | 'eir-digital' | 'tracking-scheduling' | 'eco-finance' | 'eco-game' | 'mobile-builder' | 'eco-services';
+    | 'system-docs' | 'eco-maps' | 'eir-digital' | 'tracking-scheduling' | 'eco-finance' | 'eco-game' | 'mobile-builder' | 'eco-services'
+    | 'eco-sis' | 'eco-day' | 'eco-bolt' | 'url-shortener';
 
 export interface User {
     id: string;
@@ -42,7 +43,6 @@ export interface MobileMenuItem {
     link?: string;
 }
 
-// ... Restante das interfaces existentes mantidas
 export type RecordType = 'fixedCosts' | 'variableCosts' | 'revenues' | 'receivables';
 export interface FinancialRecord { id: number; name: string; description?: string; category: string; value: number; date: string; attachment?: string; observation?: string; type?: RecordType; }
 export interface RevenueRecord extends FinancialRecord { client?: string; }
@@ -51,8 +51,23 @@ export interface FinancialData { fixedCosts: FinancialRecord[]; variableCosts: F
 export interface CalendarEvent { id: number; description: string; value: number; dueDate: string; status: 'pending' | 'completed'; completionDate?: string; reminderMinutes?: number; color?: string; justification?: string; }
 export type DemandStatus = 'demandas' | 'em_analise' | 'aprovado' | 'em_progresso' | 'concluido' | 'cancelado' | string;
 export const DEMANDA_STATUSES: DemandStatus[] = ['demandas', 'em_analise', 'aprovado', 'em_progresso', 'concluido'];
-export const STATUS_ICON_MAP: Record<string, string> = { 'demandas': 'fa-plus-circle', 'em_analise': 'fa-search', 'aprovado': 'fa-check', 'em_progresso': 'fa-spinner fa-spin', 'concluido': 'fa-check-double' };
-export const STATUS_COLOR_MAP: Record<string, string> = { 'demandas': 'border-blue-500', 'em_analise': 'border-yellow-500', 'aprovado': 'border-green-500', 'em_progresso': 'border-purple-500', 'concluido': 'border-success' };
+
+export const STATUS_ICON_MAP: Record<string, string> = {
+    'demandas': 'fa-list-ul',
+    'em_analise': 'fa-microscope',
+    'aprovado': 'fa-check',
+    'em_progresso': 'fa-spinner',
+    'concluido': 'fa-check-double'
+};
+
+export const STATUS_COLOR_MAP: Record<string, string> = {
+    'demandas': 'border-gray-500',
+    'em_analise': 'border-blue-500',
+    'aprovado': 'border-purple-500',
+    'em_progresso': 'border-yellow-500',
+    'concluido': 'border-green-500'
+};
+
 export interface Photo { id: string; src: string; name: string; }
 export interface Attachment { id: string; name: string; size: number; type: string; url: string; }
 export interface Comment { id: string; text: string; author: string; date: string; mentions?: string[]; }

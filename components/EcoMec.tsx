@@ -48,7 +48,7 @@ const EcoMec: React.FC = () => {
         if (!printWindow) return;
 
         const stepsHtml = stepsInfo.map(step => {
-            const stepData = currentOs.steps[step.id as keyof typeof currentOs.steps] as OsStep;
+            const stepData = currentOs.steps?.[step.id as keyof typeof currentOs.steps] as OsStep || { status: 'pending' };
             return `
                 <div class="print-step">
                     <div class="step-header">
@@ -116,7 +116,7 @@ const EcoMec: React.FC = () => {
             if (os.id === selectedOsId) {
                 const updatedSteps = { 
                     ...os.steps, 
-                    [stepId]: { ...os.steps[stepId as keyof typeof os.steps], ...updates } 
+                    [stepId]: { ...os.steps?.[stepId as keyof typeof os.steps], ...updates } 
                 };
                 let newStatus = os.status;
                 if (updates.status === 'in_progress') newStatus = 'em_execucao';
@@ -194,7 +194,7 @@ const EcoMec: React.FC = () => {
                     {/* Pipeline Lateral */}
                     <div className="lg:col-span-1 space-y-2">
                         {stepsInfo.map(step => {
-                            const stepData = currentOs.steps[step.id as keyof typeof currentOs.steps] as OsStep;
+                            const stepData = currentOs.steps?.[step.id as keyof typeof currentOs.steps] as OsStep || { status: 'pending' };
                             const isActive = activeOsTab === step.id;
                             return (
                                 <button key={step.id} onClick={() => setActiveOsTab(step.id)} className={`w-full p-4 rounded-2xl border transition-all flex items-center justify-between group ${isActive ? 'bg-primary border-primary text-black' : 'bg-black/20 border-white/5 text-gray-500 hover:border-white/20'}`}>
@@ -217,7 +217,7 @@ const EcoMec: React.FC = () => {
                                     <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-4">Status do Fluxo</p>
                                     <div className="flex gap-2">
                                         {['pending', 'in_progress', 'completed'].map(st => (
-                                            <button key={st} onClick={() => handleUpdateStep(activeOsTab, { status: st as any, completedAt: st === 'completed' ? new Date().toISOString() : undefined })} className={`flex-1 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest border transition-all ${currentOs.steps[activeOsTab as keyof typeof currentOs.steps].status === st ? 'bg-primary text-black border-primary' : 'bg-black/50 text-gray-500 border-white/5 hover:text-white'}`}>
+                                            <button key={st} onClick={() => handleUpdateStep(activeOsTab, { status: st as any, completedAt: st === 'completed' ? new Date().toISOString() : undefined })} className={`flex-1 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest border transition-all ${currentOs.steps?.[activeOsTab as keyof typeof currentOs.steps]?.status === st ? 'bg-primary text-black border-primary' : 'bg-black/50 text-gray-500 border-white/5 hover:text-white'}`}>
                                                 {st.replace('_', ' ')}
                                             </button>
                                         ))}
@@ -226,9 +226,9 @@ const EcoMec: React.FC = () => {
                             </div>
                             <div className="bg-primary/5 border border-primary/10 p-6 rounded-3xl text-gray-500 text-[10px] font-mono space-y-2">
                                 <p className="text-primary font-bold"># LOG_DE_AUDITORIA</p>
-                                <p>{'>'} OPERADOR: {currentUser?.name}</p>
-                                <p>{'>'} STATUS_ETAPA: {currentOs.steps[activeOsTab as keyof typeof currentOs.steps].status.toUpperCase()}</p>
-                                <p>{'>'} TIMESTAMP: {new Date().toISOString()}</p>
+                                <p>{' > '} OPERADOR: {currentUser?.name}</p>
+                                <p>{' > '} STATUS_ETAPA: {currentOs.steps?.[activeOsTab as keyof typeof currentOs.steps]?.status?.toUpperCase() || 'N/A'}</p>
+                                <p>{' > '} TIMESTAMP: {new Date().toISOString()}</p>
                             </div>
                         </div>
                     </div>
@@ -307,7 +307,7 @@ const EcoMec: React.FC = () => {
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {serviceOrders.filter(o => o.vehiclePlate.includes(searchTerm.toUpperCase())).map(os => {
-                                const progress = (Object.values(os.steps).filter(s => (s as OsStep).status === 'completed').length / 10) * 100;
+                                const progress = (Object.values(os.steps || {}).filter(s => (s as OsStep).status === 'completed').length / 10) * 100;
                                 return (
                                     <div key={os.id} onClick={() => { setSelectedOsId(os.id); setView('os_detail'); }} className="bg-black/20 p-6 rounded-3xl border border-white/5 hover:border-primary/40 cursor-pointer group transition-all">
                                         <div className="flex justify-between items-start mb-4">

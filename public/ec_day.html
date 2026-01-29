@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -89,6 +90,53 @@
         .btn-filter { background-color: #10b981; color: white; }
         .btn-filter:hover { background-color: #059669; }
         
+        /* Tabs System */
+        .tabs-container {
+            background-color: #1e293b;
+            padding: 0 30px;
+            border-bottom: 1px solid #334155;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .tab-btn {
+            padding: 15px 5px;
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-btn:hover {
+            color: #cbd5e1;
+        }
+        
+        .tab-btn.active {
+            color: #14b8a6;
+            border-bottom-color: #14b8a6;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
         /* Navegação do Calendário */
         .calendar-nav {
             background-color: #1e293b;
@@ -417,7 +465,7 @@
             font-size: 0.9rem;
         }
         
-        .form-input {
+        .form-input, .form-select {
             width: 100%;
             padding: 10px 12px;
             border: 1px solid #334155;
@@ -427,7 +475,7 @@
             color: white;
         }
         
-        .form-input:focus {
+        .form-input:focus, .form-select:focus {
             outline: none;
             border-color: #3b82f6;
         }
@@ -502,6 +550,23 @@
             margin-bottom: 15px;
         }
         
+        /* Process Table Styles */
+        .process-table-row td {
+            height: auto !important;
+            padding: 15px !important;
+            border-color: #334155 !important;
+        }
+        
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .status-progress { background-color: rgba(245, 158, 11, 0.1); color: #fbbf24; border: 1px solid #f59e0b; }
+        .status-completed { background-color: rgba(34, 197, 94, 0.1); color: #4ade80; border: 1px solid #22c55e; }
+        
         /* Scrollbar */
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #0f172a; }
@@ -511,67 +576,111 @@
         @media print {
             body { background-color: white; color: black; }
             .container { box-shadow: none; border: none; }
-            .btn, .edit-btn, .controls, .calendar-nav, .modal-overlay { display: none !important; }
+            .btn, .edit-btn, .controls, .calendar-nav, .modal-overlay, .tabs-container { display: none !important; }
             .table-container { overflow: visible; }
             tbody td { height: auto; border: 1px solid #ddd; background: white; color: black; }
             .week-header { color: black; background: #eee; }
             .field-value { color: black; }
+            .tab-content { display: block !important; } /* Print active tab only logic needed in JS if strictly enforcing */
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1><i class="fas fa-calendar-check"></i> Ec.Day - Calendário Financeiro</h1>
+            <h1><i class="fas fa-calendar-check"></i> Ec.Day - Sistema Integrado</h1>
             <div class="controls">
-                <button class="btn btn-primary" id="addWeekBtn"><i class="fas fa-plus"></i> Semana</button>
-                <button class="btn btn-secondary" id="addYearBtn"><i class="fas fa-calendar-plus"></i> Ano</button>
-                <button class="btn btn-filter" id="jumpToBtn"><i class="fas fa-calendar-day"></i> Navegar</button>
                 <button class="btn btn-print" id="printBtn"><i class="fas fa-print"></i> Imprimir</button>
                 <button class="btn btn-export" id="exportExcelBtn"><i class="fas fa-file-excel"></i> Excel</button>
             </div>
         </header>
         
-        <div class="calendar-nav">
-            <div class="period-controls">
-                <button class="nav-btn" id="prevYearBtn" title="Ano Anterior"><i class="fas fa-angle-double-left"></i></button>
-                <button class="nav-btn" id="prevMonthBtn" title="Mês Anterior"><i class="fas fa-angle-left"></i></button>
-                <div class="current-period" id="currentPeriod">Janeiro 2024</div>
-                <button class="nav-btn" id="nextMonthBtn" title="Próximo Mês"><i class="fas fa-angle-right"></i></button>
-                <button class="nav-btn" id="nextYearBtn" title="Próximo Ano"><i class="fas fa-angle-double-right"></i></button>
+        <!-- NEW: Tabs Navigation -->
+        <div class="tabs-container">
+            <div class="tabs">
+                <button class="tab-btn active" id="tabBtn-calendar" onclick="switchTab('calendar')">Calendário Financeiro</button>
+                <button class="tab-btn" id="tabBtn-processes" onclick="switchTab('processes')">Gestão de Processos</button>
+            </div>
+        </div>
+        
+        <!-- TAB 1: CALENDAR (Existing) -->
+        <div id="tab-calendar" class="tab-content active">
+            <div class="calendar-nav">
+                <div class="period-controls">
+                    <button class="nav-btn" id="prevYearBtn" title="Ano Anterior"><i class="fas fa-angle-double-left"></i></button>
+                    <button class="nav-btn" id="prevMonthBtn" title="Mês Anterior"><i class="fas fa-angle-left"></i></button>
+                    <div class="current-period" id="currentPeriod">Janeiro 2024</div>
+                    <button class="nav-btn" id="nextMonthBtn" title="Próximo Mês"><i class="fas fa-angle-right"></i></button>
+                    <button class="nav-btn" id="nextYearBtn" title="Próximo Ano"><i class="fas fa-angle-double-right"></i></button>
+                </div>
+                
+                <div class="quick-nav">
+                    <button class="quick-nav-btn" id="goTodayBtn">Hoje</button>
+                    <button class="quick-nav-btn" id="goCurrentMonthBtn">Este Mês</button>
+                </div>
+                
+                <div class="filters">
+                    <div class="filter-group">
+                        <span class="filter-label">Ano:</span>
+                        <select class="filter-select" id="yearFilter"></select>
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">Visualização:</span>
+                        <select class="filter-select" id="viewFilter">
+                            <option value="all">Todas as semanas</option>
+                            <option value="month">Apenas este mês</option>
+                            <option value="quarter">Trimestre</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" id="addWeekBtn"><i class="fas fa-plus"></i> Semana</button>
+                    <button class="btn btn-secondary" id="addYearBtn"><i class="fas fa-calendar-plus"></i> Ano</button>
+                    <button class="btn btn-filter" id="jumpToBtn"><i class="fas fa-calendar-day"></i> Navegar</button>
+                </div>
             </div>
             
-            <div class="quick-nav">
-                <button class="quick-nav-btn" id="goTodayBtn">Hoje</button>
-                <button class="quick-nav-btn" id="goCurrentMonthBtn">Este Mês</button>
+            <div class="summary-stats" id="summaryStats">
+                <!-- Stats populated by JS -->
             </div>
             
-            <div class="filters">
-                <div class="filter-group">
-                    <span class="filter-label">Ano:</span>
-                    <select class="filter-select" id="yearFilter"></select>
-                </div>
-                <div class="filter-group">
-                    <span class="filter-label">Visualização:</span>
-                    <select class="filter-select" id="viewFilter">
-                        <option value="all">Todas as semanas</option>
-                        <option value="month">Apenas este mês</option>
-                        <option value="quarter">Trimestre</option>
-                    </select>
-                </div>
+            <div class="table-container" id="tableContainer">
+                <!-- Table generated by JS -->
+            </div>
+            
+            <div class="chart-container" style="padding: 20px;">
+                <canvas id="overviewChart" height="80"></canvas>
             </div>
         </div>
-        
-        <div class="summary-stats" id="summaryStats">
-            <!-- Stats populated by JS -->
-        </div>
-        
-        <div class="table-container" id="tableContainer">
-            <!-- Table generated by JS -->
-        </div>
-        
-        <div class="chart-container" style="padding: 20px;">
-            <canvas id="overviewChart" height="80"></canvas>
+
+        <!-- TAB 2: PROCESSES (New) -->
+        <div id="tab-processes" class="tab-content">
+            <div class="calendar-nav">
+                <div class="period-controls">
+                    <h2 style="font-size:1.1rem; color:#f8fafc; display:flex; align-items:center; gap:10px;">
+                        <i class="fas fa-tasks text-blue-400"></i> Controle de DI e Empty Return
+                    </h2>
+                </div>
+                <div class="controls">
+                    <button class="btn btn-primary" onclick="openProcessModal()"><i class="fas fa-plus"></i> Novo Processo</button>
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <table id="processTable" style="min-width: 1000px;">
+                    <thead>
+                        <tr>
+                            <th style="text-align: left;">Cliente / Tipo</th>
+                            <th style="text-align: left;">Serviço</th>
+                            <th style="text-align: left;">DI / ID Interno</th>
+                            <th style="text-align: center;">Status</th>
+                            <th style="text-align: left;">Comprovante Vazio</th>
+                            <th style="text-align: center;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="processTableBody">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     
@@ -598,7 +707,7 @@
     <div class="modal-overlay" id="editModal">
         <div class="modal">
             <div class="modal-header">
-                <h3 class="modal-title">Editar Valores</h3>
+                <h3 class="modal-title">Editar Valores Financeiros</h3>
                 <button class="close-modal" id="closeModal">&times;</button>
             </div>
             <form id="editForm">
@@ -626,7 +735,64 @@
         </div>
     </div>
 
+    <!-- Process Modal -->
+    <div class="modal-overlay" id="processModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="processModalTitle">Novo Processo</h3>
+                <button class="close-modal" onclick="closeProcessModal()">&times;</button>
+            </div>
+            <form id="processForm" onsubmit="saveProcess(event)">
+                <input type="hidden" id="procId">
+                <div class="form-group">
+                    <label class="form-label">Nome do Cliente</label>
+                    <input type="text" class="form-input" id="procClient" required placeholder="Ex: Importadora XYZ">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tipo de Cliente</label>
+                    <select class="filter-select" style="width:100%" id="procType">
+                        <option value="Importação">Importação</option>
+                        <option value="Exportação">Exportação</option>
+                        <option value="Despacho">Despacho</option>
+                        <option value="Transporte">Transporte</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Serviço</label>
+                    <input type="text" class="form-input" id="procService" placeholder="Ex: Transporte Container 40HC">
+                </div>
+                <div class="form-group" style="display:flex; gap:10px;">
+                    <div style="flex:1">
+                        <label class="form-label">Número DI</label>
+                        <input type="text" class="form-input" id="procDI" placeholder="0000000-0">
+                    </div>
+                    <div style="flex:1">
+                        <label class="form-label">ID Interno</label>
+                        <input type="text" class="form-input" id="procInternalId" placeholder="#1234">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Status do Processo</label>
+                    <select class="filter-select" style="width:100%" id="procStatus">
+                        <option value="Andamento">Em Andamento</option>
+                        <option value="Completo">Completo</option>
+                        <option value="Pendente">Pendente</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Comprovante de Vazio (Recibo)</label>
+                    <input type="text" class="form-input" id="procReceipt" placeholder="Número ou Link do Recibo">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-cancel" onclick="closeProcessModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-save">Salvar Processo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
+        // Calendar Data
         let calendarData = JSON.parse(localStorage.getItem('financialCalendar')) || [];
         let editData = {};
         let currentYear = new Date().getFullYear();
@@ -634,17 +800,138 @@
         let currentView = 'all';
         let selectedYear = currentYear;
         let selectedMonth = currentMonth;
-        let jumpModalYear = currentYear; // Temp year for modal navigation
-        let jumpModalMonth = 0; // Temp month for modal navigation
+        let jumpModalYear = currentYear;
+        let jumpModalMonth = 0;
+
+        // Process Data
+        let processData = JSON.parse(localStorage.getItem('ecDayProcessData')) || [];
+        let editingProcessId = null;
 
         const weekdays = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
         const weekdaysShort = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
         const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-        const chartColors = { income: '#22c55e', expense: '#ef4444', balance: '#3b82f6' };
 
+        // --- Tabs Logic ---
+        function switchTab(tabName) {
+            // Hide all
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            // Show selected
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            document.getElementById(`tabBtn-${tabName}`).classList.add('active');
+            
+            if (tabName === 'processes') {
+                renderProcessTable();
+            }
+        }
+
+        // --- Process Logic ---
+        function openProcessModal(id = null) {
+            editingProcessId = id;
+            const modal = document.getElementById('processModal');
+            const title = document.getElementById('processModalTitle');
+            
+            if (id) {
+                const p = processData.find(x => x.id === id);
+                if (p) {
+                    title.textContent = "Editar Processo";
+                    document.getElementById('procClient').value = p.client;
+                    document.getElementById('procType').value = p.type;
+                    document.getElementById('procService').value = p.service;
+                    document.getElementById('procDI').value = p.di;
+                    document.getElementById('procInternalId').value = p.internalId;
+                    document.getElementById('procStatus').value = p.status;
+                    document.getElementById('procReceipt').value = p.receipt;
+                }
+            } else {
+                title.textContent = "Novo Processo";
+                document.getElementById('processForm').reset();
+            }
+            modal.style.display = 'flex';
+        }
+
+        function closeProcessModal() {
+            document.getElementById('processModal').style.display = 'none';
+        }
+
+        function saveProcess(e) {
+            e.preventDefault();
+            
+            const newProcess = {
+                id: editingProcessId || `proc-${Date.now()}`,
+                client: document.getElementById('procClient').value,
+                type: document.getElementById('procType').value,
+                service: document.getElementById('procService').value,
+                di: document.getElementById('procDI').value,
+                internalId: document.getElementById('procInternalId').value,
+                status: document.getElementById('procStatus').value,
+                receipt: document.getElementById('procReceipt').value,
+                updatedAt: new Date().toISOString()
+            };
+
+            if (editingProcessId) {
+                processData = processData.map(p => p.id === editingProcessId ? newProcess : p);
+            } else {
+                processData.unshift(newProcess);
+            }
+
+            localStorage.setItem('ecDayProcessData', JSON.stringify(processData));
+            renderProcessTable();
+            closeProcessModal();
+        }
+
+        function deleteProcess(id) {
+            if (confirm('Tem certeza que deseja excluir este processo?')) {
+                processData = processData.filter(p => p.id !== id);
+                localStorage.setItem('ecDayProcessData', JSON.stringify(processData));
+                renderProcessTable();
+            }
+        }
+
+        function renderProcessTable() {
+            const tbody = document.getElementById('processTableBody');
+            tbody.innerHTML = '';
+
+            if (processData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:30px; color:#64748b;">Nenhum processo registrado.</td></tr>';
+                return;
+            }
+
+            processData.forEach(p => {
+                const tr = document.createElement('tr');
+                tr.className = 'process-table-row';
+                
+                const statusClass = p.status === 'Completo' ? 'status-completed' : 'status-progress';
+                
+                tr.innerHTML = `
+                    <td>
+                        <div style="font-weight:bold; color:#f1f5f9;">${p.client}</div>
+                        <div style="font-size:0.8rem; color:#94a3b8;">${p.type}</div>
+                    </td>
+                    <td style="color:#cbd5e1;">${p.service}</td>
+                    <td>
+                        <div style="font-size:0.85rem;"><span style="color:#64748b">DI:</span> ${p.di || '-'}</div>
+                        <div style="font-size:0.85rem;"><span style="color:#64748b">ID:</span> ${p.internalId || '-'}</div>
+                    </td>
+                    <td style="text-align:center;">
+                        <span class="status-badge ${statusClass}">${p.status}</span>
+                    </td>
+                    <td style="color:#cbd5e1; font-family:monospace; font-size:0.9rem;">
+                        ${p.receipt || '<span style="color:#475569; font-style:italic">Pendente</span>'}
+                    </td>
+                    <td style="text-align:center;">
+                        <button class="edit-btn" style="display:inline-block; margin-right:5px;" onclick="openProcessModal('${p.id}')"><i class="fas fa-pen"></i></button>
+                        <button class="edit-btn" style="display:inline-block; color:#ef4444;" onclick="deleteProcess('${p.id}')"><i class="fas fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // --- Calendar Logic (Existing) ---
         function initializeData() {
             if (calendarData.length === 0) {
-                // Initialize current year + next year for robust demo
                 [currentYear, currentYear + 1].forEach(y => {
                     for (let week = 1; week <= 52; week++) {
                         let weekData = { weekNumber: week, year: y, startDate: getStartDateOfWeek(y, week), days: [] };
@@ -693,15 +980,11 @@
 
         function filterWeeks() {
             let weeks = calendarData;
-            
-            // Filter by Year first
             weeks = weeks.filter(week => new Date(week.startDate).getFullYear() === selectedYear);
 
-            // Filter by View Mode
             if (currentView === 'month' && selectedMonth > 0) {
                 weeks = weeks.filter(week => {
                     const d = new Date(week.startDate);
-                    // Check if week starts in selected month
                     return (d.getMonth() + 1) === selectedMonth;
                 });
             } else if (currentView === 'quarter') {
@@ -712,7 +995,6 @@
                     return q === currentQuarter;
                 });
             }
-            
             return weeks;
         }
 
@@ -994,6 +1276,16 @@
 
             // Exports
             document.getElementById('exportExcelBtn').onclick = () => {
+                // If on Process tab, export processes
+                if (document.getElementById('tab-processes').classList.contains('active')) {
+                    const ws = XLSX.utils.json_to_sheet(processData);
+                    const wb = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(wb, ws, "Processos");
+                    XLSX.writeFile(wb, "EcDay_Processos.xlsx");
+                    return;
+                }
+
+                // If on Calendar tab
                 const weeks = filterWeeks();
                 const data = [];
                 weeks.forEach(w => {

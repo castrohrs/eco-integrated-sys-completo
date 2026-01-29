@@ -17,35 +17,66 @@ export const THEMES = {
     matrix: { name: 'Matrix', colors: {} },
 };
 
-// Adicionada propriedade 'themeColor' para definir a cor do menu por setor
 export const SIDEBAR_SECTORS = [
     { 
         id: 'OpsMind', 
         label: 'Gestão & Controle', 
         description: 'Coordenação operacional e administrativa', 
-        themeColor: 'bg-[#1e293b]', // Slate Dark (Padrão)
-        items: [ { id: 'dashboard', textKey: 'dashboard', icon: 'fa-chart-line' }, { id: 'operational-manual', textKey: 'Manual Operacional', icon: 'fa-book' }, { id: 'system-docs', textKey: 'System Specs', icon: 'fa-microchip' }, { id: 'manifesto', textKey: 'Manifesto', icon: 'fa-scroll' } ] 
+        themeColor: 'bg-[#1e293b]', 
+        items: [ 
+            { id: 'dashboard', textKey: 'dashboard', icon: 'fa-chart-line' }, 
+            { id: 'operational-manual', textKey: 'Manual Operacional', icon: 'fa-book' }, 
+            { id: 'manifesto', textKey: 'Manifesto', icon: 'fa-scroll' } 
+        ] 
     },
     { 
         id: 'FlowCapital', 
         label: 'Financeiro', 
         description: 'Fluxo de caixa e contabilidade', 
-        themeColor: 'bg-[#064e3b]', // Emerald Dark (Verde Fechado)
-        items: [ { id: 'eco-finance', textKey: 'Gestão Financeira', icon: 'fa-money-check-alt' }, { id: 'advnc-contabil', textKey: 'Contabilidade', icon: 'fa-calculator' }, { id: 'general-approvals', textKey: 'Aprovações', icon: 'fa-check-double' }, { id: 'analytical-dashboard', textKey: 'BI Analítico', icon: 'fa-chart-bar' }, { id: 'futuro-debitos', textKey: 'Futuro x Débitos', icon: 'fa-balance-scale' }, { id: 'operational-report', textKey: 'Relatórios', icon: 'fa-file-alt' }, { id: 'operational-calendar', textKey: 'Calendário', icon: 'fa-calendar-alt' }, { id: 'faturamento-receita', textKey: 'Faturamento', icon: 'fa-file-invoice-dollar' }, { id: 'transactions', textKey: 'Transações', icon: 'fa-exchange-alt' }, { id: 'financial-entries', textKey: 'Lançamentos', icon: 'fa-plus-circle' } ] 
+        themeColor: 'bg-[#064e3b]', 
+        items: [ 
+            { id: 'eco-finance', textKey: 'Gestão Financeira', icon: 'fa-money-check-alt' }, 
+            { id: 'advnc-contabil', textKey: 'Contabilidade', icon: 'fa-calculator' }, 
+            { id: 'general-approvals', textKey: 'Aprovações', icon: 'fa-check-double' }, 
+            { id: 'analytical-dashboard', textKey: 'BI Analítico', icon: 'fa-chart-bar' }, 
+            { id: 'futuro-debitos', textKey: 'Futuro x Débitos', icon: 'fa-balance-scale' }, 
+            { id: 'operational-report', textKey: 'Relatórios', icon: 'fa-file-alt' }, 
+            { id: 'operational-calendar', textKey: 'Contas a Pagar', icon: 'fa-calendar-alt' }, 
+            { id: 'financial-entries', textKey: 'Lançamentos', icon: 'fa-plus-circle' } 
+        ] 
     },
     { 
         id: 'NeuroTech', 
-        label: 'Operacional & Oficina', 
+        label: 'Operacional', 
         description: 'Logística, Frota e Manutenção', 
-        themeColor: 'bg-[#450a0a]', // Red Dark (Vermelho Fechado - Oficina)
-        items: [ { id: 'eco-services', textKey: 'ECO.SERVICES (Novo)', icon: 'fa-rocket' }, { id: 'eco-mec', textKey: 'Eco.Mec (Oficina)', icon: 'fa-tools' }, { id: 'fleet-control', textKey: 'fleetControl', icon: 'fa-truck' }, { id: 'eco-maps', textKey: 'Radar Tático GPS', icon: 'fa-satellite' }, { id: 'tracking-scheduling', textKey: 'Eco.Container', icon: 'fa-cubes' }, { id: 'freight-quotation', textKey: 'Cotação & Cadastro', icon: 'fa-search-dollar' }, { id: 'freight-sheet', textKey: 'Planilha Fretes', icon: 'fa-table' }, { id: 'briefing', textKey: 'Demandas (Antigo)', icon: 'fa-tasks' }, { id: 'briefing-feedback', textKey: 'Feedback Cliente', icon: 'fa-comments' }, { id: 'port-checklist', textKey: 'Checklist', icon: 'fa-clipboard-check' }, { id: 'cte-reader', textKey: 'CT-e Manager', icon: 'fa-barcode' }, { id: 'eco-doc', textKey: 'Eco.Docs', icon: 'fa-file-signature' }, { id: 'container-receipt', textKey: 'Container Legacy', icon: 'fa-box' }, { id: 'gestao-predial', textKey: 'Predial', icon: 'fa-city' }, { id: 'registration-control', textKey: 'Cadastros', icon: 'fa-address-book' } ] 
+        themeColor: 'bg-[#450a0a]', 
+        items: [ 
+            { id: 'eco-services', textKey: 'ECO.SERVICES', icon: 'fa-rocket' }, 
+            { id: 'fleet-control', textKey: 'fleetControl', icon: 'fa-truck' }, 
+            { id: 'eco-maps', textKey: 'Radar Tático GPS', icon: 'fa-satellite' }, 
+            { id: 'tracking-scheduling', textKey: 'Eco.Container', icon: 'fa-cubes' }, 
+            { id: 'freight-quotation', textKey: 'Cotação & Cadastro', icon: 'fa-search-dollar' }, 
+            { id: 'freight-sheet', textKey: 'Planilha Fretes', icon: 'fa-table' }, 
+            { id: 'briefing', textKey: 'Demandas', icon: 'fa-tasks' }, 
+            { id: 'port-checklist', textKey: 'Checklist Portuário', icon: 'fa-clipboard-check' }, 
+            { id: 'cte-reader', textKey: 'CT-e Manager', icon: 'fa-barcode' }, 
+            { id: 'eco-doc', textKey: 'Eco.Docs', icon: 'fa-file-signature' }, 
+            { id: 'registration-control', textKey: 'Cadastros', icon: 'fa-address-book' } 
+        ] 
     },
     { 
         id: 'IdeaForge', 
-        label: 'Inovação & Labs', 
+        label: 'Labs & Inovação', 
         description: 'Ferramentas experimentais', 
-        themeColor: 'bg-[#312e81]', // Indigo Dark (Roxo Fechado)
-        items: [ { id: 'eco-ia', textKey: 'Eco.IA', icon: 'fa-brain' }, { id: 'eco-game', textKey: 'Eco.Game', icon: 'fa-gamepad' }, { id: 'mobile-builder', textKey: 'Mobile Builder', icon: 'fa-mobile-alt' }, { id: 'eco-files', textKey: 'Eco.Files', icon: 'fa-folder-open' }, { id: 'eco-drive', textKey: 'Eco.Drive', icon: 'fa-mouse-pointer' }, { id: 'ocr-reader', textKey: 'Leitor OCR', icon: 'fa-eye' }, { id: 'eco-sites', textKey: 'Eco.Sites', icon: 'fa-globe' }, { id: 'compliance', textKey: 'Compliance', icon: 'fa-shield-alt' }, { id: 'eco-agenda', textKey: 'Agenda', icon: 'fa-address-book' }, { id: 'eco-note', textKey: 'ecoNote', icon: 'fa-sticky-note' }, { id: 'dados-gerais-pg', textKey: 'Dados Empresa', icon: 'fa-database' } ] 
+        themeColor: 'bg-[#312e81]', 
+        items: [ 
+            { id: 'mobile-builder', textKey: 'Mobile Builder', icon: 'fa-mobile-alt' }, 
+            { id: 'eco-files', textKey: 'Eco.Files', icon: 'fa-folder-open' }, 
+            { id: 'ocr-reader', textKey: 'Leitor OCR', icon: 'fa-eye' }, 
+            { id: 'compliance', textKey: 'Compliance', icon: 'fa-shield-alt' }, 
+            { id: 'eco-agenda', textKey: 'Agenda', icon: 'fa-address-book' }, 
+            { id: 'eco-note', textKey: 'ecoNote', icon: 'fa-sticky-note' } 
+        ] 
     }
 ];
 
@@ -183,7 +214,6 @@ interface AppState {
     setMechanics: any;
     mechanicParts: any[];
     setMechanicParts: any;
-    // Mobile Builder State
     customMobileMenus: CustomMobileMenu[];
     saveMobileMenu: (menu: CustomMobileMenu) => void;
 }
@@ -228,7 +258,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     const [itemAttachments, setItemAttachments] = useState<ItemAttachment[]>([]);
     const [driveFiles, setDriveFiles] = useState<DriveFile[]>([]);
     const [companySettings, setCompanySettings] = useState<CompanySettings>({
-        companyName: 'Império Eco Log', cnpj: '00.000.000/0001-00', address: '', city: 'Rio de Janeiro', state: 'RJ', taxRegime: 'Simples Nacional', defaultTaxRate: 6, systemCurrency: 'BRL'
+        companyName: 'Império Eco Log', cnpj: '32.243.464/0001-15', address: 'Av. Brasil, 2520', city: 'Rio de Janeiro', state: 'RJ', taxRegime: 'Simples Nacional', defaultTaxRate: 6, systemCurrency: 'BRL'
     });
     const [freightAnalyses, setFreightAnalyses] = useState<FreightAnalysis[]>([]);
     const [partners, setPartners] = useState<BusinessPartner[]>([]);
@@ -244,7 +274,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     const [ecoContainerRecords, setEcoContainerRecords] = useState<ContainerRecord[]>([]);
     const [ecoContainerSchedules, setEcoContainerSchedules] = useState<ContainerSchedule[]>([]);
     const [ecoGateLogs, setEcoGateLogs] = useState<GateLog[]>([]);
-    const [shortcuts, setShortcuts] = useState<Shortcut[]>([]);
+    const [shortcuts, setShortcuts] = useState<Shortcut[]>([
+        { id: 'sc1', tabId: 'dashboard', label: 'Painel', icon: 'fa-chart-line' },
+    ]);
     const [mechanics, setMechanics] = useState<any[]>([]);
     const [mechanicParts, setMechanicParts] = useState<any[]>([]);
     const [customMobileMenus, setCustomMobileMenus] = useState<CustomMobileMenu[]>([]);

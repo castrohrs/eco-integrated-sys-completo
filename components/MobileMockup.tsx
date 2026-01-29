@@ -21,52 +21,54 @@ const MobileMockup: React.FC<MobileMockupProps> = ({ children, className = "", s
     }, []);
 
     return (
-        /* DISPOSITIVO MÓVEL (MOCKUP PREMIUM) */
-        <div className={`relative mx-auto w-[360px] h-[740px] bg-[#020617] rounded-[4rem] border-[14px] border-[#1e293b] shadow-[0_60px_120px_-20px_rgba(0,0,0,1)] overflow-hidden ring-4 ring-white/5 flex flex-col items-center group/phone transition-all duration-1000 hover:scale-[1.01] ${className}`}>
+        /* DISPOSITIVO MÓVEL (MOCKUP ULTRA PREMIUM) */
+        <div className={`relative mx-auto w-[380px] h-[780px] bg-[#020617] rounded-[4.5rem] border-[12px] border-[#1e293b] shadow-[0_80px_160px_-40px_rgba(0,0,0,1)] overflow-hidden ring-1 ring-white/10 flex flex-col items-center group/phone transition-all duration-1000 ${className}`}>
             
-            {/* BOTÕES LATERAIS COM RELEVO */}
-            <div className="absolute -left-[16px] top-32 w-[6px] h-16 bg-gradient-to-b from-[#334155] to-[#0f172a] rounded-l-lg shadow-[-2px_0_10px_rgba(0,0,0,0.5)] border-l border-white/10"></div>
-            <div className="absolute -left-[16px] top-56 w-[6px] h-16 bg-gradient-to-b from-[#334155] to-[#0f172a] rounded-l-lg shadow-[-2px_0_10px_rgba(0,0,0,0.5)] border-l border-white/10"></div>
-            <div className="absolute -right-[16px] top-40 w-[6px] h-24 bg-gradient-to-b from-[#334155] to-[#0f172a] rounded-r-lg shadow-[2px_0_10px_rgba(0,0,0,0.5)] border-r border-white/10"></div>
+            {/* BOTÕES LATERAIS DE TITÂNIO */}
+            <div className="absolute -left-[14px] top-36 w-[4px] h-12 bg-[#334155] rounded-l-lg border-l border-white/10"></div>
+            <div className="absolute -left-[14px] top-56 w-[4px] h-20 bg-[#334155] rounded-l-lg border-l border-white/10"></div>
+            <div className="absolute -right-[14px] top-44 w-[4px] h-24 bg-[#334155] rounded-r-lg border-r border-white/10"></div>
 
-            {/* ILHA DINÂMICA / NOTCH COM SENSORES */}
-            <div className="absolute top-4 left-1/2 -translate-x-1/2 w-32 h-8 bg-black rounded-full z-50 flex items-center justify-center gap-4 border border-white/5 shadow-inner pointer-events-none">
-                <div className="w-2.5 h-2.5 rounded-full bg-[#1a1f2e] border border-white/10 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-blue-500/30 blur-[1px]"></div>
-                </div>
-                <div className="w-2 h-2 rounded-full bg-emerald-500/40 animate-pulse shadow-[0_0_8px_#10b981]"></div>
+            {/* DYNAMIC ISLAND (ILHA DINÂMICA) */}
+            <div className="absolute top-5 left-1/2 -translate-x-1/2 w-28 h-7 bg-black rounded-full z-50 flex items-center justify-end pr-3 gap-3 border border-white/5 shadow-inner pointer-events-none">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#1a1f2e] border border-white/10"></div>
+                <div className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-pulse"></div>
             </div>
 
-            {/* TELA DO SMARTPHONE (GLASS EFFECT) */}
+            {/* TELA OLED (GLASS EFFECT) */}
             <div className="w-full h-full bg-[#0a0c10] flex flex-col items-center relative overflow-hidden">
                 
-                {/* BARRA DE STATUS SIMULADA */}
+                {/* BARRA DE STATUS TÁTICA */}
                 {showStatusBar && (
-                    <div className="w-full pt-4 px-8 flex justify-between items-center z-40 mb-2 shrink-0">
-                        <span className="text-[12px] font-black text-white/80">{currentTime}</span>
-                        <div className="flex items-center gap-2">
-                            <i className="fas fa-signal text-[10px] text-white/60"></i>
-                            <i className="fas fa-wifi text-[10px] text-white/60"></i>
-                            <div className="flex items-center gap-1 border border-white/20 rounded-[2px] px-0.5">
-                                <div className="w-3 h-1.5 bg-success rounded-[1px]"></div>
+                    <div className="w-full pt-5 px-10 flex justify-between items-center z-40 mb-2 shrink-0">
+                        <span className="text-[13px] font-black text-white/90 font-mono tracking-tighter">{currentTime}</span>
+                        <div className="flex items-center gap-3">
+                            <i className="fas fa-signal text-[11px] text-white/70"></i>
+                            <i className="fas fa-wifi text-[11px] text-white/70"></i>
+                            <div className="flex items-center gap-1 border border-white/30 rounded-[3px] px-0.5 h-3.5 w-6 relative">
+                                <div className="h-full bg-success rounded-[1px] w-[80%]"></div>
+                                <div className="absolute -right-1.5 top-1/2 -translate-y-1/2 w-1 h-1.5 bg-white/30 rounded-r-sm"></div>
                             </div>
                         </div>
                     </div>
                 )}
 
-                {/* Reflexo de Vidro Temperado Superior */}
-                <div className="absolute -top-1/2 -left-1/4 w-[150%] h-full bg-gradient-to-br from-white/10 via-transparent to-transparent rotate-12 pointer-events-none z-10"></div>
+                {/* Reflexo Lateral Realista */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent pointer-events-none z-10 opacity-30"></div>
                 
-                {/* CONTEÚDO SCROLLÁVEL */}
-                <div className="flex-1 w-full relative z-20 overflow-y-auto custom-scrollbar scroll-smooth">
+                {/* CONTEÚDO SCROLLÁVEL DO APP */}
+                <div className="flex-1 w-full relative z-20 overflow-y-auto no-scrollbar scroll-smooth">
                     {children}
                 </div>
 
-                {/* Home Indicator Bar */}
-                <div className="mt-auto pb-6 pt-4 flex flex-col items-center gap-6 opacity-40 shrink-0 w-full bg-gradient-to-t from-black to-transparent z-30">
-                    <div className="w-32 h-1.5 bg-slate-800 rounded-full shadow-inner border border-white/5"></div>
+                {/* Home Indicator (Barra Inferior iOS) */}
+                <div className="mt-auto pb-4 pt-2 flex flex-col items-center gap-6 opacity-30 shrink-0 w-full z-30">
+                    <div className="w-32 h-1.5 bg-slate-700 rounded-full"></div>
                 </div>
             </div>
+            
+            {/* Inner Glow Border */}
+            <div className="absolute inset-0 rounded-[3.8rem] border border-white/5 pointer-events-none z-50"></div>
         </div>
     );
 };

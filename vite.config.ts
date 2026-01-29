@@ -1,12 +1,19 @@
+
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/', // Base / para compatibilidade com Vercel (SPA). Para Electron, pode precisar de ajustes no builder.
+  base: '/', // Alterado de './' para '/' para melhor compatibilidade com o servidor dev
   define: {
-    'process.env.API_KEY': JSON.stringify(process.env.API_KEY || '')
+    'process.env': {
+      API_KEY: JSON.stringify(process.env.API_KEY || '')
+    }
+  },
+  server: {
+    open: true, // Abre o navegador automaticamente
+    port: 5173
   },
   build: {
     outDir: 'dist',

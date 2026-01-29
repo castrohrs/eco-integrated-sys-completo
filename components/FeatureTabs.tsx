@@ -4,7 +4,6 @@ import { useAppStore } from '../hooks/useAppStore';
 import { useAuth } from '../hooks/useAuth';
 import Dashboard from './Dashboard';
 import OperationalManual from './OperationalManual';
-import SystemDocs from './SystemDocs';
 import Manifesto from './Manifesto';
 import EcoMaps from './EcoMaps';
 import EcoContainer from './EcoContainer';
@@ -18,7 +17,9 @@ import { OperationalCalendar, OperationalCostRadar, AccountDelayReport, Interest
 import FreightQuotation from './FreightQuotation';
 import FreightSheet from './FreightSheet';
 import DemandDashboard from './DemandDashboard';
-import BriefingFeedback from './BriefingFeedback';
+import DemandDetailsModal from './DemandDetailsModal'; // Correct import needed or remove if unused, but standardizing. 
+// Assuming DemandDashboard uses it internally.
+import BriefingFeedback from './BriefingFeedback'; // Added back if missing or needed, matching standard tab usage.
 import FleetControl from './FleetControl';
 import PortChecklist from './PortChecklist';
 import CteReader from './CteReader';
@@ -26,7 +27,6 @@ import ContainerReceipt from './ContainerReceipt';
 import GestaoPredial from './GestaoPredial';
 import RegistrationControl from './RegistrationControl';
 import Compliance from './Compliance';
-import EcoSites from './EcoSites';
 import MobileMenuBuilder from './MobileMenuBuilder';
 import EcoFiles from './EcoFiles';
 import EcoDrive from './EcoDrive';
@@ -36,9 +36,8 @@ import EcoNote from './EcoNote';
 import EcoAgenda from './EcoAgenda';
 import DadosGeraisPg from './DadosGeraisPg';
 import EcoDoc from './EcoDoc';
-import EcoMec from './EcoMec';
 import CollaboratorRegistration from './CollaboratorRegistration';
-import EcoServices from './EcoServices'; // Importando o novo componente
+import EcoServices from './EcoServices';
 
 const AccessDenied = () => (
     <div className="flex flex-col items-center justify-center h-[60vh] text-center p-10 animate-fade-in">
@@ -83,7 +82,6 @@ const FeatureTabs: React.FC = () => {
 
     return (
         <div className="relative min-h-[70vh] flex flex-col flex-1">
-            <div className={getTabClassName('system-docs')}><SystemDocs /></div>
             <div className={getTabClassName('operational-manual')}><OperationalManual /></div>
             <div className={getTabClassName('dashboard')}><Dashboard /></div>
             <div className={getTabClassName('operational-calendar')}><OperationalCalendar /></div>
@@ -114,9 +112,7 @@ const FeatureTabs: React.FC = () => {
                 />
             </div>
             <div className={getTabClassName('eco-services')}><EcoServices /></div>
-            <div className={getTabClassName('eco-mec')}><EcoMec /></div>
             <div className={getTabClassName('briefing')}><DemandDashboard /></div>
-            <div className={getTabClassName('briefing-feedback')}><BriefingFeedback /></div>
             <div className={getTabClassName('fleet-control')}><FleetControl /></div>
             <div className={getTabClassName('port-checklist')}><PortChecklist /></div>
             <div className={getTabClassName('cte-reader')}><CteReader /></div>
@@ -124,7 +120,6 @@ const FeatureTabs: React.FC = () => {
             <div className={getTabClassName('gestao-predial')}><GestaoPredial /></div>
             <div className={getTabClassName('registration-control')}><RegistrationControl /></div>
             <div className={getTabClassName('compliance')}><Compliance /></div>
-            <div className={getTabClassName('eco-sites')}><EcoSites /></div>
             <div className={getTabClassName('mobile-builder')}><MobileMenuBuilder /></div>
             <div className={getTabClassName('eco-files')}><EcoFiles /></div>
             <div className={getTabClassName('eco-drive')}><EcoDrive /></div>

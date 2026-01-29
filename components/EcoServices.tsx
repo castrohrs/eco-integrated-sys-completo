@@ -60,7 +60,6 @@ const EcoServices: React.FC = () => {
     const filteredServices = useMemo(() => {
         let list = demands;
         if (filterType !== 'Todos') {
-            // Adaptação simples pois o tipo original é string genérica
             list = list.filter(d => d.service.includes(filterType) || d.setor.includes(filterType));
         }
         if (searchTerm) {
@@ -73,6 +72,20 @@ const EcoServices: React.FC = () => {
     }, [demands, filterType, searchTerm]);
 
     // --- HANDLERS ---
+
+    const handleGenerateLink = (serviceId: string) => {
+        const mockLink = `${window.location.origin}/share/service/${serviceId}`;
+        navigator.clipboard.writeText(mockLink);
+        
+        // Feedback para o usuário
+        const openLink = confirm(`Link de acesso gerado e copiado para a área de transferência:\n\n${mockLink}\n\nDeseja abrir o link simulado em uma nova aba?`);
+        
+        if (openLink) {
+            window.open(mockLink, '_blank');
+        }
+        
+        logAction(`ECO.SERVICES: Link gerado para demanda ${serviceId}`);
+    };
 
     const handleWizardNext = () => {
         if (wizardStep < 3) setWizardStep(prev => prev + 1);
@@ -93,7 +106,7 @@ const EcoServices: React.FC = () => {
             setor: 'Operacional',
             urgencia: newServiceData.urgency,
             prazo: newServiceData.deadline,
-            status: 'demandas', // Initial Kanban Status
+            status: 'demandas', 
             date: new Date().toLocaleDateString('pt-BR'),
             responsavel: currentUser?.name || 'Sistema',
             emailAviso: '',
@@ -106,7 +119,6 @@ const EcoServices: React.FC = () => {
         setDemands(prev => [newDemand, ...prev]);
         logAction(`ECO.SERVICES: Novo serviço registrado para ${newServiceData.client}`);
         
-        // Reset and Close
         setNewServiceData({
             client: '', contact: '', serviceType: 'Transporte', 
             description: '', urgency: 'Normal', deadline: ''
@@ -135,7 +147,6 @@ const EcoServices: React.FC = () => {
             </div>
 
             <div className="bg-bg-card border border-white/10 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
-                {/* Step 1: Cliente e Tipo */}
                 {wizardStep === 1 && (
                     <div className="space-y-6 animate-slide-up">
                         <h3 className="text-xl font-bold text-light flex items-center gap-3"><span className="bg-primary text-black w-8 h-8 rounded-lg flex items-center justify-center text-sm font-black">1</span> Identificação</h3>
@@ -169,7 +180,6 @@ const EcoServices: React.FC = () => {
                     </div>
                 )}
 
-                {/* Step 2: Detalhes */}
                 {wizardStep === 2 && (
                     <div className="space-y-6 animate-slide-up">
                          <h3 className="text-xl font-bold text-light flex items-center gap-3"><span className="bg-primary text-black w-8 h-8 rounded-lg flex items-center justify-center text-sm font-black">2</span> Detalhes da Operação</h3>
@@ -196,7 +206,6 @@ const EcoServices: React.FC = () => {
                     </div>
                 )}
 
-                {/* Step 3: Prioridade e Prazo */}
                 {wizardStep === 3 && (
                     <div className="space-y-6 animate-slide-up">
                         <h3 className="text-xl font-bold text-light flex items-center gap-3"><span className="bg-primary text-black w-8 h-8 rounded-lg flex items-center justify-center text-sm font-black">3</span> Definições Finais</h3>
@@ -297,7 +306,6 @@ const EcoServices: React.FC = () => {
             {/* Services Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-20">
                 {filteredServices.map(service => {
-                    // Tentar inferir o tipo visualmente (já que o dado original não tem o campo separado)
                     let typeKey: ServiceType = 'Outros';
                     for(const t of Object.keys(TYPE_CONFIG)) {
                         if (service.service.includes(t)) {
@@ -309,8 +317,7 @@ const EcoServices: React.FC = () => {
                     const priorityColor = PRIORITY_COLORS[service.urgencia as UrgencyLevel] || 'bg-gray-600';
 
                     return (
-                        <div key={service.id} className="bg-bg-card border border-white/5 rounded-[2rem] p-6 hover:border-primary/30 transition-all group relative overflow-hidden flex flex-col justify-between min-h-[220px]">
-                            {/* Decorative Glow */}
+                        <div key={service.id} className="bg-bg-card border border-white/5 rounded-[2rem] p-6 hover:border-primary/30 transition-all group relative overflow-hidden flex flex-col justify-between min-h-[240px]">
                             <div className={`absolute -top-10 -right-10 w-24 h-24 rounded-full blur-2xl opacity-20 ${config.bg.replace('/10', '')}`}></div>
 
                             <div>
@@ -319,7 +326,7 @@ const EcoServices: React.FC = () => {
                                         <i className={`fas ${config.icon}`}></i>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                        <span className={`w-2 h-2 rounded-full ${priorityColor}`}></span>
+                                        <button onClick={() => handleGenerateLink(service.id)} className="text-gray-600 hover:text-primary transition-colors" title="Gerar Link de Compartilhamento"><i className="fas fa-link"></i></button>
                                         <button onClick={() => handleDelete(service.id)} className="text-gray-600 hover:text-red-500 transition-colors"><i className="fas fa-trash"></i></button>
                                     </div>
                                 </div>
@@ -336,18 +343,20 @@ const EcoServices: React.FC = () => {
                                 <div className="flex items-center gap-2 text-[10px] font-bold text-gray-500">
                                     <i className="fas fa-calendar"></i> {service.prazo ? new Date(service.prazo).toLocaleDateString('pt-BR') : 'S/ Prazo'}
                                 </div>
-                                <div className="bg-bg-main px-3 py-1 rounded-lg text-[9px] font-black uppercase text-primary border border-white/5">
-                                    {service.status}
+                                <div className="flex items-center gap-2">
+                                    <span className={`w-2 h-2 rounded-full ${priorityColor}`}></span>
+                                    <div className="bg-bg-main px-3 py-1 rounded-lg text-[9px] font-black uppercase text-primary border border-white/5">
+                                        {service.status}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     );
                 })}
                 
-                {/* Add Card */}
                 <button 
                     onClick={() => setViewMode('wizard')}
-                    className="border-2 border-dashed border-white/10 rounded-[2rem] p-6 flex flex-col items-center justify-center gap-4 text-gray-600 hover:text-primary hover:border-primary/50 hover:bg-white/5 transition-all group min-h-[220px]"
+                    className="border-2 border-dashed border-white/10 rounded-[2rem] p-6 flex flex-col items-center justify-center gap-4 text-gray-600 hover:text-primary hover:border-primary/50 hover:bg-white/5 transition-all group min-h-[240px]"
                 >
                     <i className="fas fa-plus-circle text-4xl group-hover:scale-110 transition-transform"></i>
                     <span className="text-xs font-black uppercase tracking-widest">Adicionar Serviço</span>

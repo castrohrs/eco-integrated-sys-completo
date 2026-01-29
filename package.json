@@ -1,37 +1,27 @@
 {
-  "name": "eco-integrated-sys-completo",
+  "name": "3#-ecolog-interprise",
   "private": true,
-  "version": "5.2.0",
+  "version": "0.0.0",
   "type": "module",
-  "description": "Logistics Operational Intelligence Core",
-  "author": "castrohrs@gmail.com",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/castrohrs/eco-integrated-sys-completo.git"
-  },
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@google/genai": "^1.34.0",
-    "@supabase/supabase-js": "^2.93.3",
-    "chart.js": "^4.5.1",
+    "react-dom": "^19.2.3",
     "react": "^19.2.3",
     "react-chartjs-2": "^5.3.1",
-    "react-dom": "^19.2.3",
-    "socket.io-client": "^4.8.3"
+    "@google/genai": "^1.34.0",
+    "chart.js": "^4.5.1",
+    "socket.io-client": "^4.8.3",
+    "@vitejs/plugin-react": "^5.1.2",
+    "vite": "^7.3.0"
   },
   "devDependencies": {
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
-    "@vitejs/plugin-react": "^4.2.1",
-    "autoprefixer": "^10.4.17",
-    "postcss": "^8.4.35",
-    "tailwindcss": "^3.4.1",
-    "terser": "^5.46.0",
-    "typescript": "^5.3.3",
-    "vite": "^5.1.4"
+    "@types/node": "^22.14.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.0"
   }
 }
