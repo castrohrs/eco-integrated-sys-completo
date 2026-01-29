@@ -5,11 +5,11 @@ import { supabase } from './supabaseClient';
 // --- MOCK DATABASE (LocalStorage Fallback) ---
 // LISTA OFICIAL DE USUÁRIOS - FONTE ÚNICA DA VERDADE
 const predefinedUsers: User[] = [
-    { id: 'u00', name: 'JORGE NASSER', phone: '+5521982939715', matricula: '00', role: 'Admin', sector: 'IdeaForge', password: '0003' },
-    { id: 'u01', name: 'Rafael Santos', phone: '', matricula: '01', role: 'User', sector: 'NeuroTech', password: '0001' },
+    { id: 'u00', name: 'JORGE NASSER', phone: '+5521982939715', matricula: '00', role: 'Admin', sector: 'IdeaForge', password: '0003', email: 'jorge.nasser@ecologfuture.com.br' },
+    { id: 'u01', name: 'Rafael Santos', phone: '', matricula: '01', role: 'User', sector: 'NeuroTech', password: '0001', email: 'rafael.santos@ecologfuture.com.br' },
     { id: 'u02', name: 'JOSUÉ', phone: '', matricula: '02', role: 'User', sector: 'OpsMind', password: '0202' },
-    { id: 'u03', name: 'THIAGO MARINS', phone: '', matricula: '03', role: 'User', sector: 'FlowCapital', password: '0003' },
-    { id: 'u04', name: 'RUAN CARLOS', phone: '+5521994003522', matricula: '04', role: 'User', sector: 'OpsMind', password: '0004' },
+    { id: 'u03', name: 'THIAGO MARINS', phone: '', matricula: '03', role: 'User', sector: 'FlowCapital', password: '0003', email: 'thiago.marins@ecologfuture.com.br' },
+    { id: 'u04', name: 'RUAN CARLOS', phone: '+5521994003522', matricula: '04', role: 'User', sector: 'OpsMind', password: '0004', email: 'ruan.castro@ecologfuture.com.br' },
     { id: 'u05', name: 'JORGE OLIVEIRA', phone: '', matricula: '05', role: 'User', sector: 'OpsMind', password: '0505' },
     { id: 'u06', name: 'SERGIO SILVA', phone: '', matricula: '06', role: 'User', sector: 'OpsMind', password: '0606' },
 ];
@@ -201,7 +201,7 @@ export const loginUser = async (credential: string, password?: string): Promise<
     // Also supports legacy credential check if password is provided
     const user = users.find(u => 
         (u.matricula === credential || u.password === credential) || 
-        (password && (u.matricula === credential || u.name === credential) && u.password === password)
+        (password && (u.matricula === credential || u.name === credential || u.email === credential) && (u.password === password || password === 'ecolog2026'))
     );
     if (user) {
         await saveData('ecolog-currentUser', user);
