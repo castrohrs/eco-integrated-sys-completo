@@ -1,0 +1,9 @@
+{
+  "name": "EcoLog Enterprise - eco-integrated-sys-completo",
+  "description": "Sistema inteligente de gestão portuária e logística de alta performance. Repositório: eco-integrated-sys-completo",
+  "requestFramePermissions": [
+    "geolocation",
+    "microphone",
+    "camera"
+  ]
+}

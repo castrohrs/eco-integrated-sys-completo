@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>DepotHub</title>
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Sidebar Compacta -->
+        <aside class="sidebar">
+            <div class="brand"><i class="fas fa-cubes"></i></div>
+            
+            <div class="nav-filters" id="filters">
+                <button class="nav-btn active" data-cat="all" title="Todos"><i class="fas fa-th"></i></button>
+                <button class="nav-btn" data-cat="RJ" title="Rio de Janeiro">RJ</button>
+                <button class="nav-btn" data-cat="Santos" title="Santos">SP</button>
+                <button class="nav-btn" data-cat="Armador" title="Armadores"><i class="fas fa-ship"></i></button>
+                <button class="nav-btn" data-cat="Comex" title="Comex"><i class="fas fa-globe"></i></button>
+            </div>
+
+            <div class="bottom-actions">
+                <button id="btnEdit" class="action-btn" title="Editar"><i class="fas fa-pen"></i></button>
+                <button id="btnAdd" class="action-btn primary" title="Adicionar"><i class="fas fa-plus"></i></button>
+            </div>
+        </aside>
+
+        <!-- Main View -->
+        <main class="content">
+            <div id="grid" class="grid-container"></div>
+            
+            <!-- Webview Overlay -->
+            <div id="browser" class="browser-overlay hidden">
+                <div class="browser-bar">
+                    <span id="browserTitle" class="browser-title">Site</span>
+                    <div class="browser-controls">
+                        <button id="zoomOut"><i class="fas fa-minus"></i></button>
+                        <button id="zoomReset">100%</button>
+                        <button id="zoomIn"><i class="fas fa-plus"></i></button>
+                        <span class="sep"></span>
+                        <button id="openExt"><i class="fas fa-external-link-alt"></i></button>
+                        <button id="closeBrowser" class="close-btn"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <div id="webviewMount" class="webview-mount"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Form -->
+    <div id="modal" class="modal hidden">
+        <div class="modal-box">
+            <h3>Gerenciar Site</h3>
+            <form id="form">
+                <input type="hidden" id="id">
+                <div class="row">
+                    <input type="text" id="name" placeholder="Nome" required>
+                    <input type="text" id="icon" placeholder="Emoji" style="width: 50px; text-align:center;">
+                </div>
+                <input type="url" id="url" placeholder="URL (https://...)" required>
+                <select id="category">
+                    <option value="RJ">Rio de Janeiro</option>
+                    <option value="Santos">Santos</option>
+                    <option value="Armador">Armador</option>
+                    <option value="Comex">Comex</option>
+                    <option value="Docs">Documentos</option>
+                    <option value="Mapas">Mapas</option>
+                </select>
+                <div class="modal-btns">
+                    <button type="button" id="closeModal">Cancelar</button>
+                    <button type="submit" class="save-btn">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
