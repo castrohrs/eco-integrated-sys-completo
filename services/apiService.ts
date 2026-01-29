@@ -101,7 +101,12 @@ export const getUsers = async (): Promise<User[]> => {
     predefinedUsers.forEach(official => {
         const index = mergedUsers.findIndex(u => u.matricula === official.matricula);
         if (index !== -1) {
-            mergedUsers[index] = { ...mergedUsers[index], name: official.name, password: official.password };
+            mergedUsers[index] = { 
+                ...mergedUsers[index], 
+                name: official.name, 
+                password: official.password,
+                email: official.email 
+            };
         } else {
             mergedUsers.push(official);
         }
@@ -149,49 +154,50 @@ export const addUser = async (userData: Omit<User, 'id'>): Promise<User[]> => {
 export const loginUser = async (credential: string, password?: string): Promise<User | null> => {
     // Supabase Auth
     if (supabase && password) {
-        const { data, error } = await supabase.auth.signInWithPassword({
-            email: credential,
-            password: password
-        });
+        try {
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: credential,
+                password: password
+            });
 
-        if (error) {
-            console.error("Supabase login error:", error.message);
-            return null;
-        }
+            if (!error && data.user) {
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', data.user.id)
+                    .single();
 
-        if (data.user) {
-            const { data: profile } = await supabase
-                .from('profiles')
-                .select('*')
-                .eq('id', data.user.id)
-                .single();
-
-            let user: User;
-            if (profile) {
-                user = {
-                    id: profile.id,
-                    name: profile.name,
-                    phone: profile.phone,
-                    matricula: profile.matricula,
-                    role: profile.role,
-                    sector: profile.sector,
-                    photoUrl: profile.photo_url,
-                    email: data.user.email
-                };
+                let user: User;
+                if (profile) {
+                    user = {
+                        id: profile.id,
+                        name: profile.name,
+                        phone: profile.phone,
+                        matricula: profile.matricula,
+                        role: profile.role,
+                        sector: profile.sector,
+                        photoUrl: profile.photo_url,
+                        email: data.user.email
+                    };
+                } else {
+                    // Minimal user from Auth if profile missing
+                    user = {
+                        id: data.user.id,
+                        name: data.user.email?.split('@')[0] || 'User',
+                        matricula: '0000',
+                        role: 'User',
+                        sector: 'OpsMind', // Default sector
+                        phone: '',
+                        email: data.user.email
+                    };
+                }
+                await saveData('ecolog-currentUser', user);
+                return user;
             } else {
-                // Minimal user from Auth if profile missing
-                user = {
-                    id: data.user.id,
-                    name: data.user.email?.split('@')[0] || 'User',
-                    matricula: '0000',
-                    role: 'User',
-                    sector: 'OpsMind', // Default sector
-                    phone: '',
-                    email: data.user.email
-                };
+                console.warn("Supabase login failed, trying local fallback:", error?.message);
             }
-            await saveData('ecolog-currentUser', user);
-            return user;
+        } catch (err) {
+            console.error("Unexpected Supabase error, trying local fallback:", err);
         }
     }
 
