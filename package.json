@@ -2,6 +2,7 @@
   "name": "eco-integrated-sys-completo",
   "private": true,
   "version": "5.2.0",
+  "type": "module",
   "description": "Logistics Operational Intelligence Core",
   "author": "castrohrs@gmail.com",
   "repository": {
