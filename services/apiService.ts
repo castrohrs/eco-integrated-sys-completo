@@ -200,15 +200,25 @@ export const loginUser = async (credential: string, password?: string): Promise<
     if (supabase && password) {
         try {
             // Try login with email with timeout
-            const { data, error } = await Promise.race([
-                supabase.auth.signInWithPassword({
-                    email: credential,
-                    password: password
-                }),
-                timeoutPromise(10000).then(() => ({ data: { user: null }, error: { message: 'Timeout' } }))
-            ]) as any;
+            // NOTE: Using Promise.race with Supabase Auth can sometimes cause hanging promises if network is unstable.
+            // We'll wrap it carefully.
+            let authResult;
+            try {
+                 authResult = await Promise.race([
+                    supabase.auth.signInWithPassword({
+                        email: credential,
+                        password: password
+                    }),
+                    timeoutPromise(5000).then(() => ({ data: { user: null }, error: { message: 'Timeout' } }))
+                ]) as any;
+            } catch (e) {
+                authResult = { error: e };
+            }
+            
+            const { data, error } = authResult;
 
             if (!error && data?.user) {
+                // Success logic
                 const { data: profile } = await supabase
                     .from('profiles')
                     .select('*')
@@ -243,19 +253,45 @@ export const loginUser = async (credential: string, password?: string): Promise<
             }
         } catch (err) {
             console.error("Supabase login error:", err);
+            // Don't throw, just fall through to local login
         }
     }
 
-    // Local Fallback
-    const users = await getUsers();
-    const user = users.find(u => 
+    console.log("Supabase login failed or skipped. Trying local fallback...");
+
+    // Local Fallback & Hybrid Sync
+    // Check predefined users if Supabase login fails or user not found
+    const user = predefinedUsers.find(u => 
         (u.matricula === credential || u.password === credential) || 
         (password && (u.matricula === credential || u.name === credential || u.email === credential) && (u.password === password || password === 'ecolog2026'))
     );
+
     if (user) {
+        // If we found a local user, let's try to sync it to Supabase profiles for future reference
+        // This is a "Hybrid" mode where we trust the local hardcoded user and push it to DB
+        if (supabase) {
+             // We can't create an Auth user from client without admin key, 
+             // but we can ensure the profile exists if the ID matches a format we control or if we just want the record.
+             // However, for Auth to work, the user needs to sign up. 
+             // For now, we just allow access locally.
+             console.log("Logged in via Local Fallback");
+        }
         await saveData('ecolog-currentUser', user);
         return user;
     }
+
+    // Check localStorage users
+    const users = await getData<User[]>('ecolog-users', []);
+    const localUser = users.find(u => 
+        (u.matricula === credential || u.password === credential) || 
+        (password && (u.matricula === credential || u.name === credential || u.email === credential) && (u.password === password || password === 'ecolog2026'))
+    );
+    
+    if (localUser) {
+        await saveData('ecolog-currentUser', localUser);
+        return localUser;
+    }
+
     return null;
 };
 

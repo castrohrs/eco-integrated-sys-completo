@@ -81,15 +81,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             
             // Session Control
             try {
-                const sessionId = typeof crypto !== 'undefined' && crypto.randomUUID 
-                    ? crypto.randomUUID() 
-                    : `session-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
-                    
-                localStorage.setItem('ecolog_session_id', sessionId);
-                await apiService.updateUserSession(user.id, sessionId);
+                // If Supabase is connected, try to enforce session
+                if (supabase) {
+                    const sessionId = typeof crypto !== 'undefined' && crypto.randomUUID 
+                        ? crypto.randomUUID() 
+                        : `session-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+                        
+                    localStorage.setItem('ecolog_session_id', sessionId);
+                    // Don't await this, let it run in background to avoid blocking login
+                    apiService.updateUserSession(user.id, sessionId).catch(e => console.warn("Session update bg failed", e));
+                }
             } catch (err) {
                 console.warn("Falha ao registrar sessão única:", err);
-                // Não bloquear o login se falhar o registro da sessão
             }
 
             localStorage.setItem('ecolog-lastLogin', JSON.stringify({ user: user.name, timestamp: Date.now() }));
