@@ -353,25 +353,20 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     const toggleShortcut = (tabId: TabId) => setShortcuts(prev => prev.some(s => s.tabId === tabId) ? prev.filter(s => s.tabId !== tabId) : [...prev, { id: Date.now().toString(), tabId, label: tabId, icon: 'fa-star' }]);
     
     const saveMobileMenu = (menu: CustomMobileMenu) => {
-        setCustomMobileMenus(prev => {
-            const index = prev.findIndex(m => m.id === menu.id);
-            const newList = index >= 0 ? prev.map(m => m.id === menu.id ? menu : m) : [...prev, menu];
-            localStorage.setItem('ecolog-mobile-menus', JSON.stringify(newList));
-            return newList;
-        });
+        apiService.saveMobileMenu(menu).then(setCustomMobileMenus);
     };
 
     useEffect(() => {
-        apiService.getData('portFinancialData', { fixedCosts: [], variableCosts: [], revenues: [], receivables: [] }).then(setFinancialData);
-        apiService.getData('portCalendarEvents', []).then(setCalendarEvents);
-        apiService.getData('portFleetData', []).then(setFleetData);
-        apiService.getData('portMaintenanceTasks', []).then(setMaintenanceTasks);
-        apiService.getData('portNotes', []).then(setNotes);
-        apiService.getData('ecolog-freight-analyses', []).then(setFreightAnalyses);
-        apiService.getData('ecolog-approvals', []).then(setApprovalRequests);
-        apiService.getData('ecolog-eco-sites', []).then(setEcoSites);
-        apiService.getData('ecolog-compliance', []).then(setComplianceRecords);
-        apiService.getData('ecolog-mobile-menus', []).then(setCustomMobileMenus);
+        apiService.fetchFinancialData().then(setFinancialData);
+        apiService.fetchCalendarEvents().then(setCalendarEvents);
+        apiService.fetchVehicles().then(setFleetData);
+        apiService.fetchMaintenanceTasks().then(setMaintenanceTasks);
+        apiService.fetchNotes().then(setNotes);
+        apiService.fetchFreightAnalyses().then(setFreightAnalyses);
+        apiService.fetchApprovalRequests().then(setApprovalRequests);
+        apiService.fetchEcoSites().then(setEcoSites);
+        apiService.fetchComplianceRecords().then(setComplianceRecords);
+        apiService.fetchMobileMenus().then(setCustomMobileMenus);
     }, []);
 
     const value = {
