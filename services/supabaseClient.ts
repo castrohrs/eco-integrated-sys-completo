@@ -1,8 +1,8 @@
 
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.7';
+import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY;
+const supabaseUrl = 'https://ssgugrjcznwkxmtynwpp.supabase.co';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNzZ3Vncmpjem53a3htdHlud3BwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkwNzgxMTUsImV4cCI6MjA4NDY1NDExNX0.BxQK0lXmyhAUzfBIECNHowgxNzrfMGAR19hFahwlTAE';
 
 /**
  * Only initialize Supabase if both URL and Key are provided.
