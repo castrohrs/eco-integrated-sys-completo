@@ -1,0 +1,52 @@
+
+/* 
+  SISTEMA DE TEMAS ECO.LOG - SAAS MODERN EMERALD
+*/
+
+:root {
+  --color-primary-val: 5 150 105;
+  --color-secondary-val: 59 130 246;
+  --color-success-val: 16 185 129;
+  --color-warning-val: 245 158 11;
+  --color-danger-val: 225 29 72;
+  --color-light-val: 15 23 42;
+  --color-bg-main-val: 248 250 252;
+  --color-bg-card-val: 255 255 255;
+  --color-gray-text-val: 71 85 105;
+  --color-border-color-val: 226 232 240;
+}
+
+/* Tema Escuro (Mantido como opção, mas agora o default é Light) */
+html.theme-dark {
+  --color-bg-main-val: 5 7 10;
+  --color-bg-card-val: 13 17 23;
+  --color-light-val: 248 250 252;
+  --color-gray-text-val: 148 163 184;
+  --color-border-color-val: 30 41 59;
+}
+
+/* Ajustes de visibilidade para Backgrounds */
+.glass-panel {
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(226, 232, 240, 0.5);
+}
+
+h2 {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s ease;
+  transform-origin: left center;
+}
+
+h2:hover {
+  color: rgb(var(--color-primary-val));
+  cursor: default;
+}
+
+/* Sombras SaaS */
+.shadow-saas {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.shadow-saas-xl {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+}

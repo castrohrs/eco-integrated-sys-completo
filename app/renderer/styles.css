@@ -1,0 +1,128 @@
+
+:root {
+    --bg: #0f172a;
+    --sidebar: #1e293b;
+    --card: #334155;
+    --primary: #3b82f6;
+    --text: #f8fafc;
+    --text-muted: #94a3b8;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; user-select: none; }
+body { background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
+
+/* Layout */
+.app-layout { display: flex; height: 100%; }
+
+/* Sidebar */
+.sidebar {
+    width: 60px;
+    background: var(--sidebar);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 0;
+    border-right: 1px solid #475569;
+}
+.brand { font-size: 24px; color: var(--primary); margin-bottom: 20px; }
+.nav-filters { display: flex; flex-direction: column; gap: 10px; flex: 1; width: 100%; align-items: center; }
+.nav-btn {
+    width: 40px; height: 40px;
+    background: transparent; border: none;
+    color: var(--text-muted);
+    border-radius: 8px; cursor: pointer;
+    font-weight: bold; font-size: 10px;
+    transition: 0.2s;
+}
+.nav-btn:hover { background: #475569; color: #fff; }
+.nav-btn.active { background: var(--primary); color: #fff; }
+
+.bottom-actions { display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px; }
+.action-btn {
+    width: 40px; height: 40px;
+    border-radius: 12px; border: none;
+    cursor: pointer; font-size: 14px;
+    background: #475569; color: #fff;
+    transition: 0.2s;
+}
+.action-btn.primary { background: var(--primary); }
+.action-btn.active { background: #eab308; color: #000; }
+.action-btn:hover { transform: scale(1.05); }
+
+/* Main Content */
+.content { flex: 1; position: relative; padding: 20px; overflow-y: auto; }
+
+/* Grid Quadrado */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 15px;
+}
+
+.card {
+    background: var(--card);
+    aspect-ratio: 1;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.2s;
+    position: relative;
+    border: 1px solid transparent;
+    padding: 10px;
+    text-align: center;
+}
+.card:hover { background: #475569; transform: translateY(-2px); }
+.card.editing { border: 2px dashed #eab308; background: #422006; }
+
+.card-icon { font-size: 32px; margin-bottom: 8px; }
+.card-name { font-size: 11px; font-weight: 600; line-height: 1.2; word-break: break-word; }
+.card-tag { font-size: 8px; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; margin-top: 5px; color: var(--text-muted); }
+
+/* Edit Controls on Card */
+.card-controls {
+    position: absolute; top: 5px; right: 5px;
+    display: flex; gap: 5px; opacity: 1;
+}
+.mini-btn { width: 20px; height: 20px; border-radius: 4px; border: none; cursor: pointer; font-size: 10px; display: flex; align-items: center; justify-content: center; }
+.btn-edit { background: #eab308; color: #000; }
+.btn-del { background: #ef4444; color: #fff; }
+
+/* Browser Overlay */
+.browser-overlay {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: #fff; display: flex; flex-direction: column;
+    z-index: 50;
+}
+.browser-overlay.hidden { display: none; }
+.browser-bar {
+    height: 40px; background: var(--sidebar);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 15px; flex-shrink: 0;
+}
+.browser-title { font-size: 12px; font-weight: bold; }
+.browser-controls { display: flex; gap: 8px; align-items: center; }
+.browser-controls button {
+    background: rgba(255,255,255,0.1); border: none;
+    color: #fff; padding: 4px 8px; border-radius: 4px;
+    cursor: pointer; font-size: 10px;
+}
+.browser-controls button:hover { background: rgba(255,255,255,0.2); }
+.browser-controls .close-btn { background: #ef4444; }
+.sep { width: 1px; height: 16px; background: rgba(255,255,255,0.2); }
+.webview-mount { flex: 1; background: #fff; position: relative; }
+webview { width: 100%; height: 100%; }
+
+/* Modal */
+.modal { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 100; }
+.modal.hidden { display: none; }
+.modal-box { background: var(--sidebar); padding: 20px; border-radius: 12px; width: 300px; border: 1px solid #475569; }
+.modal-box h3 { margin-bottom: 15px; font-size: 14px; text-transform: uppercase; }
+.modal-box form { display: flex; flex-direction: column; gap: 10px; }
+.row { display: flex; gap: 10px; }
+input, select { background: #0f172a; border: 1px solid #475569; padding: 8px; color: #fff; border-radius: 6px; outline: none; font-size: 12px; }
+.modal-btns { display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px; }
+.modal-btns button { padding: 6px 12px; border-radius: 6px; border: none; cursor: pointer; font-size: 12px; }
+.save-btn { background: var(--primary); color: #fff; }
