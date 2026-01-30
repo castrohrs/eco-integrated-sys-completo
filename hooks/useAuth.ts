@@ -44,12 +44,46 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
     }, []);
 
+    useEffect(() => {
+        if (currentUser && supabase) {
+             const channel = supabase.channel(`session-${currentUser.id}`)
+                .on(
+                    'postgres_changes',
+                    {
+                        event: 'UPDATE',
+                        schema: 'public',
+                        table: 'profiles',
+                        filter: `id=eq.${currentUser.id}`
+                    },
+                    (payload: any) => {
+                        const localSession = localStorage.getItem('ecolog_session_id');
+                        const remoteSession = payload.new.current_session_id;
+                        if (localSession && remoteSession && localSession !== remoteSession) {
+                            alert('Sessão encerrada: Você conectou em outro dispositivo.');
+                            logout();
+                        }
+                    }
+                )
+                .subscribe();
+
+             return () => {
+                 supabase.removeChannel(channel);
+             };
+        }
+    }, [currentUser]);
+
     const login = async (email: string, password?: string): Promise<boolean> => {
         const user = await apiService.loginUser(email, password);
         if (user) {
             // Note: In a real Supabase production app, you would use supabase.auth.signInWithPassword.
             // For this phase, we keep matricula logic and sync to profile.
             setCurrentUser(user);
+            
+            // Session Control
+            const sessionId = crypto.randomUUID();
+            localStorage.setItem('ecolog_session_id', sessionId);
+            await apiService.updateUserSession(user.id, sessionId);
+
             localStorage.setItem('ecolog-lastLogin', JSON.stringify({ user: user.name, timestamp: Date.now() }));
             return true;
         }

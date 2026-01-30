@@ -357,6 +357,20 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     };
 
     useEffect(() => {
+        const handleFallback = () => {
+            addNotification({
+                type: 'danger',
+                title: 'Erro de Conexão',
+                message: 'Falha ao salvar no banco de dados. Salvando localmente.',
+                duration: 5000
+            });
+        };
+
+        window.addEventListener('storage-fallback', handleFallback);
+        return () => window.removeEventListener('storage-fallback', handleFallback);
+    }, []);
+
+    useEffect(() => {
         apiService.fetchFinancialData().then(setFinancialData);
         apiService.fetchCalendarEvents().then(setCalendarEvents);
         apiService.fetchVehicles().then(setFleetData);

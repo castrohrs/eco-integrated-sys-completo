@@ -2,6 +2,18 @@
 import { User, FinancialData, RecordType, ReceivableRecord, CalendarEvent, HistoryItem as FreightHistoryItem, Vehicle, MaintenanceTask, Demand, Note, FreightAnalysis, ApprovalRequest, EcoSite, ComplianceRecord, MobileMenuItem, CustomMobileMenu } from '../types';
 import { supabase } from './supabaseClient';
 
+const notifyFallback = () => {
+    if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('storage-fallback'));
+    }
+};
+
+export const updateUserSession = async (userId: string, sessionId: string) => {
+    if (supabase) {
+        await supabase.from('profiles').update({ current_session_id: sessionId }).eq('id', userId);
+    }
+};
+
 // --- MOCK DATABASE (LocalStorage Fallback) ---
 // LISTA OFICIAL DE USUÁRIOS - FONTE ÚNICA DA VERDADE
 const predefinedUsers: User[] = [
@@ -348,6 +360,7 @@ export const addFinancialRecord = async (type: string, record: any): Promise<Fin
         console.error("Supabase insert error:", error);
     }
 
+    notifyFallback();
     const financialData = await getData<FinancialData>('portFinancialData', initialFinancialData);
     if (!recordType) return financialData;
     const updatedData = { ...financialData, [recordType]: [...financialData[recordType], record] };
@@ -415,6 +428,7 @@ export const addCalendarEvent = async (event: Omit<CalendarEvent, 'id' | 'status
         await supabase.from('calendar_events').insert(dbEvent);
         return fetchCalendarEvents();
     }
+    notifyFallback();
     const events = await getData<CalendarEvent[]>('portCalendarEvents', []);
     const newEvent: CalendarEvent = { ...event, id: Date.now(), status: 'pending' };
     const updatedEvents = [...events, newEvent];
@@ -548,6 +562,7 @@ export const addVehicle = async (vehicle: Omit<Vehicle, 'id'>): Promise<Vehicle[
         await supabase.from('vehicles').insert(dbVehicle);
         return fetchVehicles();
     }
+    notifyFallback();
     const data = await getData<Vehicle[]>('portFleetData', []);
     const newVehicle: Vehicle = { ...vehicle, id: newId };
     const updatedData = [...data, newVehicle];
@@ -682,6 +697,7 @@ export const addNote = async (note: Omit<Note, 'id' | 'timestamp' | 'isLocked'>)
         await supabase.from('notes').insert(dbNote);
         return fetchNotes();
     }
+    notifyFallback();
     const notes = await getData<Note[]>('portNotes', []);
     const newNote: Note = { ...note, id: newId, timestamp, isLocked: false };
     const updatedNotes = [newNote, ...notes];
