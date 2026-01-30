@@ -80,9 +80,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             setCurrentUser(user);
             
             // Session Control
-            const sessionId = crypto.randomUUID();
-            localStorage.setItem('ecolog_session_id', sessionId);
-            await apiService.updateUserSession(user.id, sessionId);
+            try {
+                const sessionId = typeof crypto !== 'undefined' && crypto.randomUUID 
+                    ? crypto.randomUUID() 
+                    : `session-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+                    
+                localStorage.setItem('ecolog_session_id', sessionId);
+                await apiService.updateUserSession(user.id, sessionId);
+            } catch (err) {
+                console.warn("Falha ao registrar sessão única:", err);
+                // Não bloquear o login se falhar o registro da sessão
+            }
 
             localStorage.setItem('ecolog-lastLogin', JSON.stringify({ user: user.name, timestamp: Date.now() }));
             return true;

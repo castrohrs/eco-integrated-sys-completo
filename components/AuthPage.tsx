@@ -9,12 +9,21 @@ const AuthPage: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
-        const success = await login(email, password);
-        if (!success) setError('Acesso negado. Credenciais inválidas.');
+        setIsLoading(true);
+        try {
+            const success = await login(email, password);
+            if (!success) setError('Acesso negado. Credenciais inválidas.');
+        } catch (err) {
+            setError('Ocorreu um erro inesperado ao tentar fazer login.');
+            console.error(err);
+        } finally {
+            setIsLoading(false);
+        }
     };
     
     return (
@@ -77,9 +86,13 @@ const AuthPage: React.FC = () => {
                                     </div>
                                 )}
 
-                                <button type="submit" className="w-full p-4 mt-2 bg-emerald-600 text-white font-black uppercase tracking-widest rounded-2xl hover:bg-emerald-700 shadow-xl shadow-emerald-100 transition-all active:scale-95 flex items-center justify-center gap-3">
-                                    Acessar Sistema
-                                    <i className="fas fa-arrow-right"></i>
+                                <button 
+                                    type="submit" 
+                                    disabled={isLoading}
+                                    className={`w-full p-4 mt-2 ${isLoading ? 'bg-slate-400 cursor-not-allowed' : 'bg-emerald-600 hover:bg-emerald-700 shadow-xl shadow-emerald-100 active:scale-95'} text-white font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center gap-3`}
+                                >
+                                    {isLoading ? 'Entrando...' : 'Acessar Sistema'}
+                                    {!isLoading && <i className="fas fa-arrow-right"></i>}
                                 </button>
                             </form>
 
