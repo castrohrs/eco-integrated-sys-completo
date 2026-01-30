@@ -15,13 +15,25 @@ const AuthPage: React.FC = () => {
         e.preventDefault();
         setError('');
         setIsLoading(true);
+        
+        // Safety timeout
+        const timer = setTimeout(() => {
+             if (isLoading) {
+                 setIsLoading(false);
+                 setError('O login está demorando muito. Verifique sua conexão.');
+             }
+        }, 15000);
+
         try {
             const success = await login(email, password);
+            clearTimeout(timer);
             if (!success) setError('Acesso negado. Credenciais inválidas.');
         } catch (err) {
+            clearTimeout(timer);
             setError('Ocorreu um erro inesperado ao tentar fazer login.');
             console.error(err);
         } finally {
+            clearTimeout(timer);
             setIsLoading(false);
         }
     };

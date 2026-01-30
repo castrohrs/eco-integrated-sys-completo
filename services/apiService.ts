@@ -8,9 +8,19 @@ const notifyFallback = () => {
     }
 };
 
+const timeoutPromise = (ms: number) => new Promise((_, reject) => setTimeout(() => reject(new Error('Request timed out')), ms));
+
 export const updateUserSession = async (userId: string, sessionId: string) => {
     if (supabase) {
-        await supabase.from('profiles').update({ current_session_id: sessionId }).eq('id', userId);
+        try {
+            // Race between update and timeout
+            await Promise.race([
+                supabase.from('profiles').update({ current_session_id: sessionId }).eq('id', userId),
+                timeoutPromise(5000)
+            ]);
+        } catch (error) {
+            console.warn("Update session timed out or failed, proceeding locally.", error);
+        }
     }
 };
 
@@ -189,13 +199,16 @@ export const loginUser = async (credential: string, password?: string): Promise<
     // Supabase Auth
     if (supabase && password) {
         try {
-            // Try login with email
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email: credential,
-                password: password
-            });
+            // Try login with email with timeout
+            const { data, error } = await Promise.race([
+                supabase.auth.signInWithPassword({
+                    email: credential,
+                    password: password
+                }),
+                timeoutPromise(10000).then(() => ({ data: { user: null }, error: { message: 'Timeout' } }))
+            ]) as any;
 
-            if (!error && data.user) {
+            if (!error && data?.user) {
                 const { data: profile } = await supabase
                     .from('profiles')
                     .select('*')
