@@ -181,11 +181,16 @@ const Header: React.FC = () => {
                     <i className="fas fa-bell text-xl"></i>
                     <span className="absolute top-0 right-0 w-2 h-2 bg-danger rounded-full border border-white"></span>
                 </button>
-                <div className="group relative">
+                <div 
+                    className="relative"
+                    ref={userMenuRef}
+                    onMouseEnter={() => setIsUserMenuOpen(true)}
+                    onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                >
                     <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold cursor-pointer hover:brightness-110 transition-all border-2 border-transparent hover:border-primary/20">
                         {currentUser?.name?.[0].toUpperCase()}
                     </div>
-                    <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-border-color shadow-xl rounded-lg py-2 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all transform origin-top-right group-hover:translate-y-0 translate-y-2">
+                    <div className={`absolute right-0 top-full mt-2 w-48 bg-white border border-border-color shadow-xl rounded-lg py-2 transition-all transform origin-top-right ${isUserMenuOpen ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-2 pointer-events-none'}`}>
                         <div className="px-4 py-2 border-b border-border-color mb-2">
                             <p className="text-xs font-bold text-navy">{currentUser?.name}</p>
                             <p className="text-[10px] text-gray-500">{currentUser?.sector}</p>
