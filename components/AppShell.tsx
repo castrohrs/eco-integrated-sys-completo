@@ -131,6 +131,24 @@ const Header: React.FC = () => {
     const { activeTab, setActiveTab } = useAppStore();
     const { currentUser, logout } = useAuth();
     const { t } = useLanguage();
+    const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+    const userMenuRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+                setIsUserMenuOpen(false);
+            }
+        };
+
+        if (isUserMenuOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+        
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isUserMenuOpen]);
     
     const currentTabInfo = useMemo(() => {
         for (const sector of SIDEBAR_SECTORS) {
