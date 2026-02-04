@@ -121,6 +121,9 @@ interface AppState {
     completeCalendarEvent: (id: number, justification: string) => void;
     demands: Demand[];
     setDemands: React.Dispatch<React.SetStateAction<Demand[]>>;
+    addDemand: (demand: Demand) => void;
+    updateDemand: (demand: Demand) => void;
+    deleteDemand: (id: string) => void;
     columnTitles: Record<string, string>;
     setColumnTitles: React.Dispatch<React.SetStateAction<Record<string, string>>>;
     addKanbanColumn: (title: string) => void;
@@ -293,6 +296,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     const addCalendarEvent = (event: any) => apiService.addCalendarEvent(event).then(setCalendarEvents);
     const updateCalendarEvent = (event: CalendarEvent) => apiService.updateCalendarEvent(event).then(setCalendarEvents);
     const completeCalendarEvent = (id: number, justification: string) => apiService.completeCalendarEvent(id, justification).then(setCalendarEvents);
+    const addDemand = (d: Demand) => apiService.addDemand(d).then(setDemands);
+    const updateDemand = (d: Demand) => apiService.updateDemand(d).then(setDemands);
+    const deleteDemand = (id: string) => apiService.deleteDemand(id).then(setDemands);
     const logAction = (content: string) => setHistory(prev => [{ id: Date.now().toString(), content, timestamp: new Date().toISOString() }, ...prev]);
     const clearHistory = () => setHistory([]);
     const addKanbanColumn = (title: string) => setColumnTitles(prev => ({ ...prev, [title.toLowerCase().replace(/\s+/g, '_')]: title }));
@@ -373,6 +379,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     useEffect(() => {
         apiService.fetchFinancialData().then(setFinancialData);
         apiService.fetchCalendarEvents().then(setCalendarEvents);
+        apiService.fetchDemands().then(setDemands);
         apiService.fetchVehicles().then(setFleetData);
         apiService.fetchMaintenanceTasks().then(setMaintenanceTasks);
         apiService.fetchNotes().then(setNotes);
@@ -391,7 +398,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         isAutoStartEnabled, toggleAutoStart,
         financialData, addRecord, deleteRecord, markAsPaid,
         calendarEvents, addCalendarEvent, updateCalendarEvent, completeCalendarEvent,
-        demands, setDemands, columnTitles, setColumnTitles, addKanbanColumn, removeKanbanColumn,
+        demands, setDemands, addDemand, updateDemand, deleteDemand, columnTitles, setColumnTitles, addKanbanColumn, removeKanbanColumn,
         freightSheetData, addFreightSheetItem, updateFreightSheetItem, deleteFreightSheetItem,
         clientNotes, addClientNote,
         fleetData, addVehicle, updateVehicle, deleteVehicle,

@@ -31,7 +31,7 @@ const PRIORITY_COLORS: Record<UrgencyLevel, string> = {
 };
 
 const EcoServices: React.FC = () => {
-    const { demands, setDemands, logAction } = useAppStore();
+    const { demands, addDemand, deleteDemand, logAction } = useAppStore();
     const { currentUser } = useAuth();
     
     const [viewMode, setViewMode] = useState<'board' | 'wizard'>('board');
@@ -129,7 +129,7 @@ const EcoServices: React.FC = () => {
 
     const handleDelete = (id: string) => {
         if(confirm("Tem certeza que deseja remover este serviço?")) {
-            setDemands(prev => prev.filter(d => d.id !== id));
+            deleteDemand(id);
         }
     };
 

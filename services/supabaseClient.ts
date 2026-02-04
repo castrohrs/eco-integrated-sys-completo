@@ -5,14 +5,24 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 /**
- * Only initialize Supabase if both URL and Key are provided.
- * The rest of the application handles the case where 'supabase' is null
- * by falling back to localStorage (Local-Only mode).
+ * Initialize Supabase.
+ * STRICT MODE: Local storage fallback is DISABLED.
+ * The application MUST have valid Supabase credentials to function.
  */
 export const supabase = (supabaseUrl && supabaseAnonKey) 
-    ? createClient(supabaseUrl, supabaseAnonKey) 
+    ? createClient(supabaseUrl, supabaseAnonKey, {
+        auth: {
+            storage: sessionStorage,
+            autoRefreshToken: true,
+            persistSession: true,
+            detectSessionInUrl: true
+        }
+    }) 
     : null;
 
 if (!supabase) {
-    console.warn("Supabase credentials (VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY) are missing. System running in Local-Only mode with localStorage persistence.");
+    const msg = "FATAL: Supabase credentials missing. Local storage is disabled. Application cannot function without backend connection.";
+    console.error(msg);
+    // Throwing here might stop execution immediately
+    throw new Error(msg);
 }

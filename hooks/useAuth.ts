@@ -56,7 +56,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                         filter: `id=eq.${currentUser.id}`
                     },
                     (payload: any) => {
-                        const localSession = localStorage.getItem('ecolog_session_id');
+                        const localSession = sessionStorage.getItem('ecolog_session_id');
                         const remoteSession = payload.new.current_session_id;
                         if (localSession && remoteSession && localSession !== remoteSession) {
                             alert('Sessão encerrada: Você conectou em outro dispositivo.');
@@ -87,7 +87,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                         ? crypto.randomUUID() 
                         : `session-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
                         
-                    localStorage.setItem('ecolog_session_id', sessionId);
+                    sessionStorage.setItem('ecolog_session_id', sessionId);
                     // Don't await this, let it run in background to avoid blocking login
                     apiService.updateUserSession(user.id, sessionId).catch(e => console.warn("Session update bg failed", e));
                 }
