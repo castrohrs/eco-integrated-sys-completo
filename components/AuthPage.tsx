@@ -28,10 +28,21 @@ const AuthPage: React.FC = () => {
             const success = await login(email, password);
             clearTimeout(timer);
             if (!success) setError('Acesso negado. Credenciais inválidas.');
-        } catch (err) {
+        } catch (err: any) {
             clearTimeout(timer);
-            setError('Ocorreu um erro inesperado ao tentar fazer login.');
-            console.error(err);
+            console.error("Login error:", err);
+            
+            const msg = err?.message || '';
+            
+            if (msg.includes("Invalid login credentials")) {
+                setError('Credenciais inválidas. Verifique seu email e senha.');
+            } else if (msg.includes("Email not confirmed")) {
+                setError('Email não confirmado. Verifique sua caixa de entrada.');
+            } else if (msg.includes("network") || msg.includes("fetch")) {
+                setError('Erro de conexão. Verifique sua internet ou a configuração do Supabase.');
+            } else {
+                setError(`Falha no login: ${msg || 'Erro desconhecido'}`);
+            }
         } finally {
             clearTimeout(timer);
             setIsLoading(false);
