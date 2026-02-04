@@ -4,33 +4,47 @@ import { useLanguage } from '../hooks/useLanguage';
 import MobileMockup from './MobileMockup';
 
 const AuthPage: React.FC = () => {
-    const { login } = useAuth();
+    const { login, register } = useAuth();
     const { t } = useLanguage();
+    const [isLoginMode, setIsLoginMode] = useState(true);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [successMsg, setSuccessMsg] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
     const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
+        setSuccessMsg('');
         setIsLoading(true);
         
         // Safety timeout
         const timer = setTimeout(() => {
              if (isLoading) {
                  setIsLoading(false);
-                 setError('O login está demorando muito. Verifique sua conexão.');
+                 setError('A operação está demorando muito. Verifique sua conexão.');
              }
         }, 15000);
 
         try {
-            const success = await login(email, password);
-            clearTimeout(timer);
-            if (!success) setError('Acesso negado. Credenciais inválidas.');
+            if (isLoginMode) {
+                const success = await login(email, password);
+                clearTimeout(timer);
+                if (!success) setError('Acesso negado. Credenciais inválidas.');
+            } else {
+                const success = await register(email, password);
+                clearTimeout(timer);
+                if (success) {
+                    setSuccessMsg('Conta criada com sucesso! Se necessário, verifique seu email para confirmar.');
+                    setIsLoginMode(true); // Switch back to login
+                } else {
+                    setError('Falha ao criar conta. Tente novamente.');
+                }
+            }
         } catch (err: any) {
             clearTimeout(timer);
-            console.error("Login error:", err);
+            console.error("Auth error:", err);
             
             const msg = err?.message || '';
             
@@ -38,10 +52,14 @@ const AuthPage: React.FC = () => {
                 setError('Credenciais inválidas. Verifique seu email e senha.');
             } else if (msg.includes("Email not confirmed")) {
                 setError('Email não confirmado. Verifique sua caixa de entrada.');
+            } else if (msg.includes("User already registered")) {
+                setError('Este email já está cadastrado. Tente fazer login.');
             } else if (msg.includes("network") || msg.includes("fetch")) {
                 setError('Erro de conexão. Verifique sua internet ou a configuração do Supabase.');
+            } else if (msg.includes("Password should be")) {
+                setError('A senha deve ter pelo menos 6 caracteres.');
             } else {
-                setError(`Falha no login: ${msg || 'Erro desconhecido'}`);
+                setError(`Falha na autenticação: ${msg || 'Erro desconhecido'}`);
             }
         } finally {
             clearTimeout(timer);
@@ -74,8 +92,12 @@ const AuthPage: React.FC = () => {
                     <MobileMockup>
                         <div className="w-full px-8 pt-12 pb-8 flex flex-col items-center min-h-full">
                             <div className="text-center mb-8">
-                                <h2 className="text-3xl font-black text-slate-900 tracking-tight">Login</h2>
-                                <p className="text-slate-500 text-sm font-medium mt-2">Entre com suas credenciais para acessar o núcleo.</p>
+                                <h2 className="text-3xl font-black text-slate-900 tracking-tight">
+                                    {isLoginMode ? 'Login' : 'Criar Conta'}
+                                </h2>
+                                <p className="text-slate-500 text-sm font-medium mt-2">
+                                    {isLoginMode ? 'Entre com suas credenciais para acessar.' : 'Preencha os dados para se registrar.'}
+                                </p>
                             </div>
                             
                             <form onSubmit={handleFormSubmit} className="w-full space-y-4">
@@ -100,6 +122,7 @@ const AuthPage: React.FC = () => {
                                         onChange={e => setPassword(e.target.value)} 
                                         placeholder="••••••••"
                                         required 
+                                        minLength={6}
                                     />
                                 </div>
                                 
@@ -109,14 +132,34 @@ const AuthPage: React.FC = () => {
                                     </div>
                                 )}
 
+                                {successMsg && (
+                                    <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-3 text-center">
+                                        <p className="text-emerald-600 text-xs font-bold">{successMsg}</p>
+                                    </div>
+                                )}
+
                                 <button 
                                     type="submit" 
                                     disabled={isLoading}
                                     className={`w-full p-4 mt-2 ${isLoading ? 'bg-slate-400 cursor-not-allowed' : 'bg-emerald-600 hover:bg-emerald-700 shadow-xl shadow-emerald-100 active:scale-95'} text-white font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center gap-3`}
                                 >
-                                    {isLoading ? 'Entrando...' : 'Acessar Sistema'}
-                                    {!isLoading && <i className="fas fa-arrow-right"></i>}
+                                    {isLoading ? 'Processando...' : (isLoginMode ? 'Acessar Sistema' : 'Registrar')}
+                                    {!isLoading && <i className={`fas ${isLoginMode ? 'fa-arrow-right' : 'fa-user-plus'}`}></i>}
                                 </button>
+
+                                <div className="text-center pt-4">
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setIsLoginMode(!isLoginMode);
+                                            setError('');
+                                            setSuccessMsg('');
+                                        }}
+                                        className="text-xs font-bold text-slate-500 hover:text-emerald-600 transition-colors uppercase tracking-wide"
+                                    >
+                                        {isLoginMode ? 'Não tem conta? Registre-se' : 'Já tem conta? Fazer Login'}
+                                    </button>
+                                </div>
                             </form>
 
                             <div className="mt-auto pt-8 opacity-30 text-center">

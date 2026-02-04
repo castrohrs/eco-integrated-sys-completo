@@ -7,6 +7,7 @@ interface AuthState {
     currentUser: User | null;
     users: User[];
     login: (email: string, password?: string) => Promise<boolean>;
+    register: (email: string, password: string) => Promise<boolean>;
     logout: () => void;
     addUser: (user: Omit<User, 'id'>) => void;
     updateUser: (user: User) => void;
@@ -101,6 +102,23 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         return false;
     };
 
+    const register = async (email: string, password: string): Promise<boolean> => {
+        const user = await apiService.registerUser(email, password);
+        if (user) {
+            // Auto login after register if session is established (Supabase signUp usually signs in if email confirm is off)
+            // But if email confirm is on, user is null or session is null.
+            // Check session
+            const { data: { session } } = await supabase!.auth.getSession();
+            if (session) {
+                setCurrentUser(user);
+                return true;
+            }
+            // If no session (email confirm required), return true to indicate success but no auto-login
+            return true;
+        }
+        return false;
+    };
+
     const logout = async () => {
         await apiService.logoutUser();
         setCurrentUser(null);
@@ -123,7 +141,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setUsers(updatedUsers);
     };
 
-    const value = { currentUser, users, login, logout, addUser, updateUser, deleteUser };
+    const value = { currentUser, users, login, register, logout, addUser, updateUser, deleteUser };
     return React.createElement(AuthContext.Provider, { value }, children);
 };
 

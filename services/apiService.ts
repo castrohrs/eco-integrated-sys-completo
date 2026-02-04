@@ -136,6 +136,7 @@ export const loginUser = async (credential: string, password?: string): Promise<
     if (error) throw error;
 
     if (data?.user) {
+        // Fetch profile
         const { data: profile } = await supabase!
             .from('profiles')
             .select('*')
@@ -153,7 +154,52 @@ export const loginUser = async (credential: string, password?: string): Promise<
                 photoUrl: profile.photo_url,
                 email: data.user.email
             };
+        } else {
+            // Fallback if profile doesn't exist yet (e.g. manually created in Auth but not in profiles)
+            // We can try to create a default profile here or return a basic user
+            const defaultUser: User = {
+                id: data.user.id,
+                name: data.user.email?.split('@')[0] || 'User',
+                matricula: '0000',
+                role: 'User',
+                sector: 'OpsMind',
+                phone: '',
+                email: data.user.email
+            };
+            // Try to sync it to DB so next time it exists
+            await syncUserProfile(defaultUser);
+            return defaultUser;
         }
+    }
+    return null;
+};
+
+export const registerUser = async (email: string, password: string): Promise<User | null> => {
+    if (!supabase) throwPersistenceError();
+    
+    const { data, error } = await supabase!.auth.signUp({
+        email,
+        password,
+    });
+
+    if (error) throw error;
+
+    if (data?.user) {
+        // Create initial profile
+        const newUser: User = {
+            id: data.user.id,
+            name: email.split('@')[0],
+            matricula: Math.floor(1000 + Math.random() * 9000).toString(),
+            role: 'User',
+            sector: 'OpsMind',
+            phone: '',
+            email: email
+        };
+
+        // We use upsert to be safe, though insert is fine for new user
+        await syncUserProfile(newUser);
+        
+        return newUser;
     }
     return null;
 };
