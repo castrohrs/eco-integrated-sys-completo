@@ -97,7 +97,7 @@ const EcoServices: React.FC = () => {
         else setViewMode('board');
     };
 
-    const handleSubmitService = () => {
+    const handleSubmitService = async () => {
         const newDemand: Demand = {
             id: `SRV-${Math.floor(Math.random() * 10000)}`,
             client: newServiceData.client,
@@ -116,15 +116,20 @@ const EcoServices: React.FC = () => {
             comments: []
         };
 
-        setDemands(prev => [newDemand, ...prev]);
-        logAction(`ECO.SERVICES: Novo serviço registrado para ${newServiceData.client}`);
-        
-        setNewServiceData({
-            client: '', contact: '', serviceType: 'Transporte', 
-            description: '', urgency: 'Normal', deadline: ''
-        });
-        setWizardStep(1);
-        setViewMode('board');
+        try {
+            await addDemand(newDemand);
+            logAction(`ECO.SERVICES: Novo serviço registrado para ${newServiceData.client}`);
+            
+            setNewServiceData({
+                client: '', contact: '', serviceType: 'Transporte', 
+                description: '', urgency: 'Normal', deadline: ''
+            });
+            setWizardStep(1);
+            setViewMode('board');
+        } catch (error) {
+            console.error("Erro ao salvar serviço:", error);
+            alert("Erro ao salvar serviço. Verifique sua conexão.");
+        }
     };
 
     const handleDelete = (id: string) => {
