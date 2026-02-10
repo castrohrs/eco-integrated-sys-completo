@@ -47,7 +47,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     useEffect(() => {
         if (currentUser && supabase) {
-             const channel = supabase.channel(`session-${currentUser.id}`)
+            const channel = supabase.channel(`session-${currentUser.id}`)
                 .on(
                     'postgres_changes',
                     {
@@ -67,9 +67,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 )
                 .subscribe();
 
-             return () => {
-                 supabase.removeChannel(channel);
-             };
+            return () => {
+                supabase.removeChannel(channel);
+            };
         }
     }, [currentUser]);
 
@@ -79,15 +79,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             // Note: In a real Supabase production app, you would use supabase.auth.signInWithPassword.
             // For this phase, we keep matricula logic and sync to profile.
             setCurrentUser(user);
-            
+
             // Session Control
             try {
                 // If Supabase is connected, try to enforce session
                 if (supabase) {
-                    const sessionId = typeof crypto !== 'undefined' && crypto.randomUUID 
-                        ? crypto.randomUUID() 
+                    const sessionId = typeof crypto !== 'undefined' && crypto.randomUUID
+                        ? crypto.randomUUID()
                         : `session-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
-                        
+
                     sessionStorage.setItem('ecolog_session_id', sessionId);
                     // Don't await this, let it run in background to avoid blocking login
                     apiService.updateUserSession(user.id, sessionId).catch(e => console.warn("Session update bg failed", e));
@@ -122,9 +122,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const logout = async () => {
         await apiService.logoutUser();
         setCurrentUser(null);
-        window.location.reload();
     };
-    
+
     const addUser = async (userData: Omit<User, 'id'>) => {
         const updatedUsers = await apiService.addUser(userData);
         setUsers(updatedUsers);

@@ -6,8 +6,17 @@ import LandingPage from './components/LandingPage';
 import { useAuth } from './hooks/useAuth';
 import AuthPage from './components/AuthPage';
 
-const MainApp: React.FC = () => {
+
+const App: React.FC = () => {
+    const { currentUser } = useAuth();
     const [showLanding, setShowLanding] = useState(true);
+
+    // Reset landing page when logging out (currentUser becomes null)
+    React.useEffect(() => {
+        if (!currentUser) {
+            setShowLanding(true);
+        }
+    }, [currentUser]);
 
     const handleEnter = () => {
         setShowLanding(false);
@@ -21,6 +30,10 @@ const MainApp: React.FC = () => {
         return <LandingPage onEnter={handleEnter} />;
     }
 
+    if (!currentUser) {
+        return <AuthPage />;
+    }
+
     return (
         <div className="flex min-h-screen">
             <AppShell onReturnToLanding={handleReturnToLanding}>
@@ -28,17 +41,6 @@ const MainApp: React.FC = () => {
             </AppShell>
         </div>
     );
-};
-
-
-const App: React.FC = () => {
-    const { currentUser } = useAuth();
-
-    if (!currentUser) {
-        return <AuthPage />;
-    }
-
-    return <MainApp />;
 };
 
 export default App;

@@ -157,9 +157,9 @@ const EcoServices: React.FC = () => {
                         <h3 className="text-xl font-bold text-light flex items-center gap-3"><span className="bg-primary text-black w-8 h-8 rounded-lg flex items-center justify-center text-sm font-black">1</span> Identificação</h3>
                         
                         <div>
-                            <label className="text-xs font-bold text-gray-500 uppercase ml-1">Quem é o Cliente?</label>
+                            <label className="text-xs font-bold text-navy/70 uppercase ml-1">Quem é o Cliente?</label>
                             <input 
-                                className="w-full bg-bg-main border border-white/10 rounded-xl p-4 text-white outline-none focus:border-primary transition-all font-bold"
+                                className="w-full bg-bg-main border border-white/10 rounded-xl p-4 text-navy outline-none focus:border-primary transition-all font-bold"
                                 placeholder="Nome da Empresa ou Cliente"
                                 value={newServiceData.client}
                                 onChange={e => setNewServiceData({...newServiceData, client: e.target.value})}
@@ -168,7 +168,7 @@ const EcoServices: React.FC = () => {
                         </div>
 
                         <div>
-                            <label className="text-xs font-bold text-gray-500 uppercase ml-1">Tipo de Serviço</label>
+                            <label className="text-xs font-bold text-navy/70 uppercase ml-1">Tipo de Serviço</label>
                             <div className="grid grid-cols-2 gap-3 mt-2">
                                 {Object.keys(TYPE_CONFIG).map(type => (
                                     <button
@@ -190,9 +190,9 @@ const EcoServices: React.FC = () => {
                          <h3 className="text-xl font-bold text-light flex items-center gap-3"><span className="bg-primary text-black w-8 h-8 rounded-lg flex items-center justify-center text-sm font-black">2</span> Detalhes da Operação</h3>
                         
                         <div>
-                            <label className="text-xs font-bold text-gray-500 uppercase ml-1">O que precisa ser feito?</label>
+                            <label className="text-xs font-bold text-navy/70 uppercase ml-1">O que precisa ser feito?</label>
                             <textarea 
-                                className="w-full bg-bg-main border border-white/10 rounded-xl p-4 text-white outline-none focus:border-primary transition-all h-32 resize-none"
+                                className="w-full bg-bg-main border border-white/10 rounded-xl p-4 text-navy outline-none focus:border-primary transition-all h-32 resize-none"
                                 placeholder="Descreva a demanda, rota, tipo de carga ou necessidade..."
                                 value={newServiceData.description}
                                 onChange={e => setNewServiceData({...newServiceData, description: e.target.value})}
@@ -200,9 +200,9 @@ const EcoServices: React.FC = () => {
                         </div>
 
                         <div>
-                            <label className="text-xs font-bold text-gray-500 uppercase ml-1">Contato (WhatsApp/Email)</label>
+                            <label className="text-xs font-bold text-navy/70 uppercase ml-1">Contato (WhatsApp/Email)</label>
                             <input 
-                                className="w-full bg-bg-main border border-white/10 rounded-xl p-4 text-white outline-none focus:border-primary transition-all"
+                                className="w-full bg-bg-main border border-white/10 rounded-xl p-4 text-navy outline-none focus:border-primary transition-all"
                                 placeholder="(00) 00000-0000"
                                 value={newServiceData.contact}
                                 onChange={e => setNewServiceData({...newServiceData, contact: e.target.value})}
@@ -216,7 +216,7 @@ const EcoServices: React.FC = () => {
                         <h3 className="text-xl font-bold text-light flex items-center gap-3"><span className="bg-primary text-black w-8 h-8 rounded-lg flex items-center justify-center text-sm font-black">3</span> Definições Finais</h3>
 
                         <div>
-                            <label className="text-xs font-bold text-gray-500 uppercase ml-1">Nível de Urgência</label>
+                            <label className="text-xs font-bold text-navy/70 uppercase ml-1">Nível de Urgência</label>
                             <div className="flex gap-4 mt-2">
                                 {(['Normal', 'Alta', 'Crítica'] as UrgencyLevel[]).map(level => (
                                     <button
@@ -231,10 +231,10 @@ const EcoServices: React.FC = () => {
                         </div>
 
                         <div>
-                            <label className="text-xs font-bold text-gray-500 uppercase ml-1">Prazo Limite</label>
+                            <label className="text-xs font-bold text-navy/70 uppercase ml-1">Prazo Limite</label>
                             <input 
                                 type="date"
-                                className="w-full bg-bg-main border border-white/10 rounded-xl p-4 text-white outline-none focus:border-primary transition-all"
+                                className="w-full bg-bg-main border border-white/10 rounded-xl p-4 text-navy outline-none focus:border-primary transition-all"
                                 value={newServiceData.deadline}
                                 onChange={e => setNewServiceData({...newServiceData, deadline: e.target.value})}
                             />
@@ -303,7 +303,7 @@ const EcoServices: React.FC = () => {
                         placeholder="BUSCAR SERVIÇO..." 
                         value={searchTerm}
                         onChange={e => setSearchTerm(e.target.value)}
-                        className="w-full bg-bg-main border border-white/10 rounded-xl py-2.5 pl-10 pr-4 text-xs font-bold text-white uppercase outline-none focus:border-primary transition-all"
+                        className="w-full bg-bg-main border border-white/10 rounded-xl py-2.5 pl-10 pr-4 text-xs font-bold text-navy uppercase outline-none focus:border-primary transition-all"
                     />
                 </div>
             </div>
